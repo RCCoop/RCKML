@@ -20,4 +20,25 @@
             let _ = try? getTestDocument()
             XCTAssertEqual(RCKML().text, "Hello, World!")
         }
+        
+        func testKmlColors() throws {
+            //80F0BE78
+            //== rgba: 120,190,240,50%
+            let kmlStruct = KMLColor(red: 120.0/255.0, green: 190.0/255.0, blue: 240.0/255.0, alpha: 0.5)
+            XCTAssertEqual(kmlStruct.red * 255.0, 120.0)
+            XCTAssertEqual(kmlStruct.green * 255.0, 190)
+            XCTAssertEqual(kmlStruct.blue * 255.0, 240)
+            XCTAssertEqual(kmlStruct.alpha, 0.5)
+            
+            let asString = kmlStruct.colorString
+            XCTAssertEqual(asString, "80F0BE78")
+            
+            let reconstructed = try KMLColor(asString)
+            XCTAssertEqual(Int(reconstructed.red * 255.0), 120)
+            XCTAssertEqual(Int(reconstructed.green * 255.0), 190)
+            XCTAssertEqual(Int(reconstructed.blue * 255.0), 240)
+            XCTAssertEqual(Int(reconstructed.alpha * 10.0), 5)
+
+        }
+
     }

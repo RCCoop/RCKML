@@ -14,7 +14,7 @@ protocol KMLStyleSelector: KmlElement {
 
 protocol KMLColorStyle: KmlElement {
     var id: String? { get }
-    var color: String { get }
+    var color: KMLColor { get }
 }
 
 

@@ -11,7 +11,7 @@ import AEXML
 struct KMLLineStyle {
     var id: String?
     var width: Double
-    var color: String
+    var color: KMLColor
 }
 
 extension KMLLineStyle: KmlElement {
@@ -23,7 +23,7 @@ extension KMLLineStyle: KmlElement {
         try Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
         self.width = try xml.requiredXmlChild(name: "width").double!
-        self.color = try xml.requiredXmlChild(name: "color").string
+        self.color = try xml.requiredKmlChild(ofType: KMLColor.self)
     }
 }
 
