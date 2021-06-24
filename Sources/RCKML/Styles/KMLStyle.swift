@@ -14,7 +14,12 @@ struct KMLStyle {
     var polyStyle: KMLPolyStyle?
     
     var isEmpty: Bool {
-        return lineStyle == nil && polyStyle == nil
+        if lineStyle == nil && polyStyle == nil {
+            return true
+        } else if lineStyle?.color == nil && polyStyle?.color == nil {
+            return true
+        }
+        return false
     }
 }
 
@@ -24,7 +29,7 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
     }
     
     init(xml: AEXMLElement) throws {
-        try? Self.verifyXmlTag(xml)
+        try Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
         
         let lineStyleElement = xml[KMLLineStyle.kmlTag]

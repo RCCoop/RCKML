@@ -74,14 +74,15 @@ extension KMLDocument {
     private static func kmlStylesInElement(_ xmlElement:AEXMLElement) throws -> [KMLStyleUrl:KMLStyleSelector] {
         //return array of StyleMap and Style
         let styleMaps = try xmlElement[KMLStyleMap.kmlTag].all?.map({ try KMLStyleMap(xml: $0) }) ?? []
-        let styles = try xmlElement[KMLStyle.kmlTag].all?.map({ try KMLStyle(xml: $0) }) ?? []
+        let styleElements = xmlElement[KMLStyle.kmlTag].all ?? []
+        let styles = styleElements.compactMap({ try? KMLStyle(xml: $0) })
         let all: [KMLStyleSelector] = styles + styleMaps
         return all.reduce(into: [:], { dict, style in
             if let styleId = style.id {
                 let styleUrl = KMLStyleUrl(styleUrl: styleId)
                 if let baseStyle = style as? KMLStyle,
-                   baseStyle.isEmpty == false {
-                    dict[styleUrl] = style
+                   baseStyle.isEmpty == true {
+                    dict[styleUrl] = nil
                 } else {
                     dict[styleUrl] = style
                 }

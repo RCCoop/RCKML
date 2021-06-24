@@ -24,8 +24,8 @@ let package = Package(
             dependencies: ["AEXML"]),
         .testTarget(
             name: "RCKMLTests",
-            dependencies: ["RCKML"],
-            resources: [.process("GoogleTest.kml")]
+            dependencies: ["RCKML", "AEXML"],
+            resources: [.process("GoogleTest.kml"), .process("GoogleTest.json")]
         ),
     ]
 )

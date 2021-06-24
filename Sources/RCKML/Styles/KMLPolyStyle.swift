@@ -12,7 +12,7 @@ struct KMLPolyStyle {
     var id: String?
     var fill: Bool
     var outline: Bool
-    var color: KMLColor
+    var color: KMLColor?
 }
 
 extension KMLPolyStyle: KmlElement {
@@ -23,9 +23,9 @@ extension KMLPolyStyle: KmlElement {
     init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
-        self.color = try xml.requiredKmlChild(ofType: KMLColor.self)
-        self.fill = xml["fill"].bool ?? false
-        self.outline = xml["outline"].bool ?? false
+        self.color = xml.optionalKmlChild(ofType: KMLColor.self)
+        self.fill = xml["fill"].bool ?? true
+        self.outline = xml["outline"].bool ?? true
     }
     
     
