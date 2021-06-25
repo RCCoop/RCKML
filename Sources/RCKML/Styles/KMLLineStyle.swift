@@ -25,6 +25,13 @@ extension KMLLineStyle: KmlElement {
         self.width = xml.optionalXmlChild(name: "width")?.double! ?? 1.0
         self.color = xml.optionalKmlChild(ofType: KMLColor.self)
     }
+    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        element.addChild(name: "width", value: String(format: "%.1f", width))
+        let _ = color.map({ element.addChild($0.xmlElement) })
+        return element
+    }
 }
 
 extension KMLLineStyle: KMLColorStyle {}

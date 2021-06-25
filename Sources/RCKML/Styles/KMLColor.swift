@@ -28,6 +28,10 @@ extension KMLColor : KmlElement {
         }
         try self.init(kmlString)
     }
+    
+    var xmlElement: AEXMLElement {
+        AEXMLElement(name: Self.kmlTag, value: colorString)
+    }
 }
 
 extension KMLColor {

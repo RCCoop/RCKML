@@ -26,6 +26,12 @@ extension KMLPoint : KmlElement {
         
         self.coordinate = firstCoord
     }
+    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        element.addChild(KMLCoordinateSequence(coordinates: [coordinate]).xmlElement)
+        return element
+    }
 
 }
 

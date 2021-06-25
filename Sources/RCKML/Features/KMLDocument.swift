@@ -10,6 +10,7 @@ import AEXML
 
 struct KMLDocument {
     var name: String?
+    var description: String?
     var features: [KMLFeature]
     var styles: [KMLStyleUrl: KMLStyleSelector]
 }
@@ -24,6 +25,7 @@ extension KMLDocument : KmlElement {
         self.features = try Self.features(from: xml)
         self.name = xml.optionalXmlChild(name: "name")?.string
         self.styles = try Self.kmlStylesInElement(xml)
+        self.description = xml.optionalXmlChild(name: "description")?.string
     }
     
     func getStyleFromUrl(_ styleUrl: KMLStyleUrl) -> KMLStyle? {
@@ -40,10 +42,39 @@ extension KMLDocument : KmlElement {
         }
         return nil
     }
+    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        let _ = name.map({ element.addChild(name: "name", value: $0) })
+        let _ = description.map({ element.addChild(name: "description", value: $0) })
+        
+        for (_, style) in styles {
+            element.addChild(style.xmlElement)
+        }
+        
+        for item in features {
+            element.addChild(item.xmlElement)
+        }
+        
+        return element
+    }
+    
 }
 
 extension KMLDocument: KMLContainer {
     
+}
+
+extension KMLDocument {
+    func writeToFile() -> AEXMLDocument {
+        //TODO: make this functional
+        let xmlDoc = AEXMLDocument()
+        //<kml xmlns="http://www.opengis.net/kml/2.2">
+        let kmlRoot = xmlDoc.addChild(name: "kml", attributes: ["xmlns": "http://www.opengis.net/kml/2.2"])
+        kmlRoot.addChild(xmlElement)
+        return xmlDoc
+        //let kmlDoc = AEXMLElement(name: <#T##String#>, value: <#T##String?#>, attributes: <#T##[String : String]#>)
+    }
 }
 
 extension KMLDocument {

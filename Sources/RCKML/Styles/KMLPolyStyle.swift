@@ -28,7 +28,13 @@ extension KMLPolyStyle: KmlElement {
         self.outline = xml["outline"].bool ?? true
     }
     
-    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        element.addChild(name: "fill", value: (fill ? "1" : "0"))
+        element.addChild(name: "outline", value: (outline ? "1" : "0"))
+        let _ = color.map({ element.addChild($0.xmlElement) })
+        return element
+    }
 }
 
 extension KMLPolyStyle: KMLColorStyle {

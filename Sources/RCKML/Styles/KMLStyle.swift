@@ -42,4 +42,11 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
             self.polyStyle = try KMLPolyStyle(xml: polyStyleElement)
         }
     }
+    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        let _ = lineStyle.map({ element.addChild($0.xmlElement) })
+        let _ = polyStyle.map({ element.addChild($0.xmlElement) })
+        return element
+    }
 }

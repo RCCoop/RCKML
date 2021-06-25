@@ -16,6 +16,16 @@ struct KMLCoordinate {
     let altitude: Double?
 }
 
+extension KMLCoordinate: CustomStringConvertible {
+    var description: String {
+        if let altitude = altitude {
+            return String(format: "%6f,%.6f,%.1f", longitude, latitude, altitude)
+        } else {
+            return String(format: "%.6f,%.6f", longitude, latitude)
+        }
+    }
+}
+
 //MARK:- KMLCoordinates XML Struct
 
 struct KMLCoordinateSequence {
@@ -28,6 +38,10 @@ extension KMLCoordinateSequence: KmlElement {
     init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.coordinates = try Self.parseCoordinates(xml.string)
+    }
+    
+    var xmlElement: AEXMLElement {
+        AEXMLElement(name: Self.kmlTag, value: coordinates.map(\.description).joined(separator: "\n"))
     }
     
     private static func parseCoordinates(_ coordString:String) throws -> [KMLCoordinate] {

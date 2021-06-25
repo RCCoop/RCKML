@@ -26,7 +26,15 @@ extension KMLFolder : KmlElement {
         self.features = try Self.features(from: xml)
     }
     
-    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        element.addChild(name: "name", value: name)
+        let _ = description.map({ element.addChild(name: "description", value: $0) })
+        for item in features {
+            element.addChild(item.xmlElement)
+        }
+        return element
+    }
 }
 
 extension KMLFolder : KMLFeature {

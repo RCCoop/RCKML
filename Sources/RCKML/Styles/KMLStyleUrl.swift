@@ -29,5 +29,8 @@ extension KMLStyleUrl: KMLStyleSelector {
         self.styleUrl = urlString
     }
     
+    var xmlElement: AEXMLElement {
+        AEXMLElement(name: Self.kmlTag, value: "#" + styleUrl)
+    }
     
 }

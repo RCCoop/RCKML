@@ -28,6 +28,13 @@ extension KMLMultiGeometry: KmlElement {
         })
     }
     
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        for geo in geometries {
+            element.addChild(geo.xmlElement)
+        }
+        return element
+    }
 }
 
 //MARK: KMLGeometry

@@ -4,7 +4,15 @@
 
     final class RCKMLTests: XCTestCase {
 
-                
+        func testWriting() {
+            guard let doc = getTestDocument() else {
+                return
+            }
+            
+            let stringRep = doc.writeToFile().xml
+            print(stringRep)
+        }
+        
     }
     
     //MARK: Finished Tests

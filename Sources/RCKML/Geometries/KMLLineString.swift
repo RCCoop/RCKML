@@ -24,6 +24,13 @@ extension KMLLineString : KmlElement {
         self.coordinates = kmlCoords.coordinates
     }
     
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        let coordRep = KMLCoordinateSequence(coordinates: coordinates)
+        element.addChild(coordRep.xmlElement)
+        return element
+    }
+    
 }
 
 //MARK: KMLGeometry

@@ -45,6 +45,15 @@ extension KMLPlacemark : KmlElement {
         }
     }
     
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        element.addChild(name: "name", value: name)
+        let _ = description.map({ element.addChild(name: "description", value: $0) })
+        element.addChild(geometry.xmlElement)
+        let _ = styleUrl.map({ element.addChild($0.xmlElement) })
+        let _ = style.map({ element.addChild($0.xmlElement) })
+        return element
+    }
 }
 
 extension KMLPlacemark : KMLFeature {

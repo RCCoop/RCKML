@@ -37,7 +37,14 @@ extension KMLPolygon : KmlElement {
         }
     }
     
-    
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        element.addChild(name: Self.outerBoundaryKey, value: outerBoundaryIs.xmlElement.xml)
+        innerBoundaryIs?.forEach({ oneInner in
+            element.addChild(name: Self.innerBoundaryKey, value: oneInner.xmlElement.xml)
+        })
+        return element
+    }
 }
 
 //MARK: KMLGeometry
@@ -67,4 +74,9 @@ extension KMLPolygon.LinearRing : KmlElement {
         self.coordinates = kmlCoords.coordinates
     }
     
+    var xmlElement: AEXMLElement {
+        let element = AEXMLElement(name: Self.kmlTag)
+        element.addChild(KMLCoordinateSequence(coordinates: coordinates).xmlElement)
+        return element
+    }
 }

@@ -19,6 +19,7 @@ enum KMLError: Error {
 protocol KmlElement {
     static var kmlTag: String { get }
     init(xml: AEXMLElement) throws
+    var xmlElement: AEXMLElement { get }
 }
 
 extension KmlElement {
@@ -28,6 +29,9 @@ extension KmlElement {
         }
     }
     
+    static func xmlAttributesWithId(_ id:String?) -> [String : String] {
+        id != nil ? ["id":id!] : [:]
+    }
 }
 
 //MARK:- KML Extension for AEXMLElement
