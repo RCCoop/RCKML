@@ -37,6 +37,20 @@ extension KMLContainer {
         return self.features.compactMap({ $0 as? KMLPlacemark })
     }
     
+    var placemarksRecursive: [KMLPlacemark] {
+        features.reduce(into: [KMLPlacemark]()) { result, feature in
+            if let placemark = feature as? KMLPlacemark {
+                result.append(placemark)
+            } else if let subContainer = feature as? KMLContainer {
+                result.append(contentsOf: subContainer.placemarksRecursive)
+            }
+        }
+    }
+    
+    func getItemNamed(_ itemName: String) -> KMLFeature? {
+        self.features.first(where: { $0.name == itemName })
+    }
+    
     func listContents(indentation:Int = 0) {
         for feature in features {
             var basic = "\(String(repeating: ".", count: indentation))\(feature.name): \(String(describing: type(of: feature)))"
