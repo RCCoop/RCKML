@@ -61,19 +61,18 @@ extension KMLDocument : KmlElement {
     
 }
 
-extension KMLDocument: KMLContainer {
-    
-}
+extension KMLDocument: KMLContainer {}
 
 extension KMLDocument {
-    func writeToFile() -> AEXMLDocument {
-        //TODO: make this functional
+    func kmlString() -> String {
         let xmlDoc = AEXMLDocument()
-        //<kml xmlns="http://www.opengis.net/kml/2.2">
         let kmlRoot = xmlDoc.addChild(name: "kml", attributes: ["xmlns": "http://www.opengis.net/kml/2.2"])
         kmlRoot.addChild(xmlElement)
-        return xmlDoc
-        //let kmlDoc = AEXMLElement(name: <#T##String#>, value: <#T##String?#>, attributes: <#T##[String : String]#>)
+        return xmlDoc.xml
+    }
+    
+    func kmlData() -> Data? {
+        kmlString().data(using: .utf8)
     }
 }
 
