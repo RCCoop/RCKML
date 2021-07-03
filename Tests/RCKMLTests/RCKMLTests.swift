@@ -9,8 +9,19 @@
                 return
             }
             
-            let stringRep = doc.writeToFile().xml
+            let stringRep = doc.kmlString()
             print(stringRep)
+        }
+        
+        func testMutation() {
+            guard var doc = getTestDocument() else {
+                return
+            }
+            
+            let folderCount = doc.folders.count
+            let featuresCount = doc.features.count
+            doc.features.removeAll(where: { $0 is KMLFolder })
+            XCTAssertEqual(doc.features.count, featuresCount - folderCount)
         }
         
     }
