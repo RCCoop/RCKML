@@ -1,12 +1,14 @@
 //
 //  KMLPlacemark.swift
-//  KMLTester
+//  RCKML
 //
 //  Created by Ryan Linn on 6/17/21.
 //
 
 import Foundation
 import AEXML
+
+//TODO: Documentation
 
 struct KMLPlacemark {
     var name: String

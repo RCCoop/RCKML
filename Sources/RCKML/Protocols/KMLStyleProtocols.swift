@@ -1,12 +1,14 @@
 //
 //  KMLStyle.swift
-//  KMLTester
+//  RCKML
 //
 //  Created by Ryan Linn on 6/18/21.
 //
 
 import Foundation
 import AEXML
+
+//TODO: Documentation
 
 protocol KMLStyleSelector: KmlElement {
     var id: String? { get }

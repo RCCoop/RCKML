@@ -1,6 +1,6 @@
 //
 //  KMLStyleUrl.swift
-//  KMLTester
+//  RCKML
 //
 //  Created by Ryan Linn on 6/18/21.
 //
@@ -8,6 +8,7 @@
 import Foundation
 import AEXML
 
+//TODO: Documentation
 
 struct KMLStyleUrl: Hashable {
     var styleUrl: String

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  KMLColor.swift
+//  RCKML
 //
 //  Created by Ryan Linn on 6/19/21.
 //
@@ -9,10 +9,20 @@ import Foundation
 import AEXML
 import CoreGraphics
 
+//TODO: Documentation
+
+/// <#Description#>
 struct KMLColor {
+    /// <#Description#>
     var red: Double
+    
+    /// <#Description#>
     var green: Double
+    
+    /// <#Description#>
     var blue: Double
+    
+    /// <#Description#>
     var alpha: Double
 }
 
@@ -41,6 +51,7 @@ extension KMLColor {
         case scannerFailure(String)
     }
     
+    /// <#Description#>
     public var colorString :String {
         return String(format: "%02lX%02lX%02lX%02lX", lroundf(Float(alpha) * 255), lroundf(Float(blue) * 255), lroundf(Float(green) * 255), lroundf(Float(red) * 255))
     }
@@ -49,7 +60,10 @@ extension KMLColor {
     public var cgColor: CGColor {
         CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
     }
-
+    
+    /// <#Description#>
+    /// - Parameter kmlString: <#kmlString description#>
+    /// - Throws: <#description#>
     init(_ kmlString: String) throws {
         let formattedString = kmlString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         let scanner = Scanner(string: formattedString)

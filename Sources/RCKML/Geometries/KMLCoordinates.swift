@@ -1,6 +1,6 @@
 //
 //  KMLCoordinates.swift
-//  KMLTester
+//  RCKML
 //
 //  Created by Ryan Linn on 6/17/21.
 //
@@ -9,6 +9,8 @@ import Foundation
 import AEXML
 
 //MARK:- Individual Coordinate Struct
+
+//TODO: Documentation
 
 struct KMLCoordinate {
     let latitude: Double

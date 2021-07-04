@@ -1,12 +1,14 @@
 //
 //  KMLKnownTypes.swift
-//  KMLTester
+//  RCKML
 //
 //  Created by Ryan Linn on 6/18/21.
 //
 
 import Foundation
 import AEXML
+
+//TODO: Documentation
 
 //MARK:- Known Geometry Types
 
