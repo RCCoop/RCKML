@@ -10,28 +10,33 @@ import AEXML
 
 //TODO: Documentation
 
-struct KMLStyleUrl: Hashable {
-    var styleUrl: String
+/// A wrapper around a KMLStyleSelector's id, used for referencing that
+/// style from another style.
+///
+/// For more info, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#styleurl)
+public struct KMLStyleUrl: Hashable {
+    var styleId: String
 }
 
+//MARK:- Internal StyleSelector conformance
 extension KMLStyleUrl: KMLStyleSelector {
     var id: String? { nil }
     
-    static var kmlTag: String {
+    public static var kmlTag: String {
         "styleUrl"
     }
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         var urlString = xml.string
         if urlString.first == "#" {
             urlString.removeFirst()
         }
-        self.styleUrl = urlString
+        self.styleId = urlString
     }
     
-    var xmlElement: AEXMLElement {
-        AEXMLElement(name: Self.kmlTag, value: "#" + styleUrl)
+    public var xmlElement: AEXMLElement {
+        AEXMLElement(name: Self.kmlTag, value: "#" + styleId)
     }
     
 }

@@ -12,7 +12,8 @@ import AEXML
 
 //TODO: Documentation
 
-struct KMLCoordinate {
+/// <#Description#>
+public struct KMLCoordinate {
     let latitude: Double
     let longitude: Double
     let altitude: Double?
@@ -30,7 +31,8 @@ extension KMLCoordinate: CustomStringConvertible {
 
 //MARK:- KMLCoordinates XML Struct
 
-struct KMLCoordinateSequence {
+/// <#Description#>
+public struct KMLCoordinateSequence {
     var coordinates: [KMLCoordinate]
 }
 

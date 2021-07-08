@@ -8,60 +8,24 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
+/// Protocol for conforming to the abstract KML element type *StyleSelector*,
+/// which is the base type for *Style* and *StyleMap*.
+///
+/// For definition, see [KML spec](https://developers.google.com/kml/documentation/kmlreference#styleselector)
 protocol KMLStyleSelector: KmlElement {
+    /// Identifier of the KML element, which can be set in order to read
+    /// styles from the main body of the KML document via a *KMLStyleMap*
     var id: String? { get }
 }
 
+/// Protocol for conforming to the abstract KML element *ColorStyle*,
+/// which is the base type for *LineStyle*, *PolyStyle*, *IconStyle*, and *LabelStyle*
+///
+/// For definition, see [KML spec](https://developers.google.com/kml/documentation/kmlreference#colorstyle)
 protocol KMLColorStyle: KmlElement {
+    /// Identifier of the KML element, which can be set in order to read
+    /// styles from the main body of the KML document via a *KMLStyleMap*
     var id: String? { get }
+    /// The object representing the displayed color
     var color: KMLColor? { get }
 }
-
-
-/*
- 
- https://developers.google.com/kml/documentation/kmlreference?csw=1#styleselector
- https://developers.google.com/kml/documentation/kmlreference?csw=1#style
- https://developers.google.com/kml/documentation/kmlreference?csw=1#stylemap
- 
- https://developers.google.com/kml/documentation/kmlreference?csw=1#substyle
- https://developers.google.com/kml/documentation/kmlreference?csw=1#colorstyle
- https://developers.google.com/kml/documentation/kmlreference?csw=1#linestyle
- https://developers.google.com/kml/documentation/kmlreference?csw=1#polystyle
- 
- StyleSelector {
-    id: String
- }
- 
- Style: StyleSelector {
-    id: String
-    lineStyle: LineStyle?
-    polyStyle: PolyStyle?
- }
- 
- StyleMap: StyleSelector {
-    pair: StylePair
- 
-    struct StylePair {
-        normal: StyleUrl
-        highlighted: StyleUrl
-    }
- }
-  
- ColorStyle {
-    id: String
-    color: KMLColor
- }
- 
- LineStyle: ColorStyle {
-    width: Double
- }
- 
- PolyStyle: ColorStyle {
-    fill: Bool
-    outline: Bool
- }
- 
- */

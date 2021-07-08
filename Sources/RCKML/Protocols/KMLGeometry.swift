@@ -8,11 +8,13 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
 //MARK:- Geometry Protocol
 
-protocol KMLGeometry: KmlElement {
+/// Any KmlElement type to be used in *Geometry* objects of a KML document.
+///
+/// For definition, see [KML spec](https://developers.google.com/kml/documentation/kmlreference#geometry)
+public protocol KMLGeometry: KmlElement {
+    /// Type-level definition to map conforming type to a known KML Geometry class.
     static var geometryType: KMLGeometryType { get }
 }
 

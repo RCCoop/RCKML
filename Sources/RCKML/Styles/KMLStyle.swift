@@ -8,9 +8,16 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
 
-struct KMLStyle {
+/// A wrapper around possible KML style types used to determine
+/// drawing behavior for an object, referenced either inside a
+/// KMLFeature, or from a KMLStyleMap by its id.
+///
+/// A KMLStyle can contain up to one of each type of KMLColorStyle,
+/// plus ListStyle.
+///
+/// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#style)
+public struct KMLStyle {
     var id: String?
     var lineStyle: KMLLineStyle?
     var polyStyle: KMLPolyStyle?
@@ -25,12 +32,13 @@ struct KMLStyle {
     }
 }
 
+//MARK:- Internal StyleSelector Protocol Conformance
 extension KMLStyle: KmlElement, KMLStyleSelector {
-    static var kmlTag: String {
+    public static var kmlTag: String {
         "Style"
     }
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
         
@@ -45,7 +53,7 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
         }
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
         let _ = lineStyle.map({ element.addChild($0.xmlElement) })
         let _ = polyStyle.map({ element.addChild($0.xmlElement) })

@@ -9,29 +9,42 @@ import Foundation
 import AEXML
 import CoreGraphics
 
-//TODO: Documentation
+#if canImport(UIKit)
+import UIKit
+#endif
 
-/// <#Description#>
-struct KMLColor {
-    /// <#Description#>
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
+
+/// A struct representing the RGBa color value of a KML object's *color* tag.
+///
+/// For a brief discussion of KML's hex color coding, see [ColorStyle](https://developers.google.com/kml/documentation/kmlreference#colorstyle) reference.
+public struct KMLColor {
+    /// A value between 0.0 and 1.0 representing the Red element of the color
     var red: Double
     
-    /// <#Description#>
+    /// A value between 0.0 and 1.0 representing the Green element of the color
     var green: Double
     
-    /// <#Description#>
+    /// A value between 0.0 and 1.0 representing the Blue element of the color
     var blue: Double
     
-    /// <#Description#>
+    /// A value between 0.0 and 1.0 representing the alpha element of the color
     var alpha: Double
 }
 
+//MARK:- KmlElement
 extension KMLColor : KmlElement {
-    static var kmlTag: String {
+    public static var kmlTag: String {
         "color"
     }
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         guard let kmlString = xml.value else {
             throw KMLError.missingRequiredElement(elementName: "colorString")
@@ -39,31 +52,55 @@ extension KMLColor : KmlElement {
         try self.init(kmlString)
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         AEXMLElement(name: Self.kmlTag, value: colorString)
     }
 }
 
-extension KMLColor {
-    
-    public enum ColorError: Error {
-        case stringLength(String)
-        case scannerFailure(String)
-    }
-    
-    /// <#Description#>
-    public var colorString :String {
+//MARK:- Public Getters
+public extension KMLColor {
+        
+    /// String representation of the KML Color, as found in the KML tag "\<color\>xxxxxxxx\</color\>"
+    var colorString :String {
         return String(format: "%02lX%02lX%02lX%02lX", lroundf(Float(alpha) * 255), lroundf(Float(blue) * 255), lroundf(Float(green) * 255), lroundf(Float(red) * 255))
     }
     
     @available(iOS 13.0, *)
-    public var cgColor: CGColor {
+    var cgColor: CGColor {
         CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
     }
     
-    /// <#Description#>
-    /// - Parameter kmlString: <#kmlString description#>
-    /// - Throws: <#description#>
+    #if canImport(UIKit)
+    var uiColor: UIColor {
+        UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+    }
+    #endif
+    
+    #if canImport(AppKit)
+    var nsColor: NSColor {
+        NSColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+    }
+    #endif
+    
+    #if canImport(SwiftUI)
+    @available(iOS 13.0, *)
+    var color: Color {
+        Color(red: red, green: green, blue: blue)
+            .opacity(alpha)
+    }
+    #endif
+        
+}
+
+//MARK:- Internal Initializers
+internal extension KMLColor {
+    enum ColorError: Error {
+        case stringLength(String)
+        case scannerFailure(String)
+    }
+
+    /// Initializer of KMLColor from a tag found in the KML file.
+    /// - Throws: KMLColor.ColorError if the string is of the incorrect format.
     init(_ kmlString: String) throws {
         let formattedString = kmlString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         let scanner = Scanner(string: formattedString)
@@ -83,5 +120,5 @@ extension KMLColor {
         red = Double(hexNumber & 0x000000FF) / 255.0
 
     }
-    
+
 }

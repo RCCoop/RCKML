@@ -10,9 +10,9 @@ import AEXML
 
 //TODO: Documentation
 
-struct KMLLineString {
+public struct KMLLineString {
     
-    let coordinates: [KMLCoordinate]
+    public let coordinates: [KMLCoordinate]
     
 }
 

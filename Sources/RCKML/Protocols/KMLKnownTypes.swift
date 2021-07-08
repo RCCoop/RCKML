@@ -8,16 +8,19 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
 //MARK:- Known Geometry Types
 
-enum KMLGeometryType: String, CaseIterable {
+/// Helper enum to map between Geometry types in a KML file and the corresponding types
+/// in this library.
+/// - Important: Whenever a Geometry type is added to this library, you must also add
+/// a corresponding case to this enum.
+public enum KMLGeometryType: String, CaseIterable {
     case LineString
     case Polygon
     case Point
     case MultiGeometry
     
+    /// The RCKML type that corresponds to this KML Geometry class.
     var concreteType: KMLGeometry.Type {
         switch self {
         case .LineString:
@@ -34,10 +37,16 @@ enum KMLGeometryType: String, CaseIterable {
 }
 
 //MARK:- Known Feature Types
-enum KMLFeatureType : String, CaseIterable {
+
+/// Helper enum to map between Feature types in a KML file and the corresponding
+/// types in this library.
+/// - Important: Whenever a Feature type is added to this library, you must also add
+/// a corresponding case to this enum
+public enum KMLFeatureType : String, CaseIterable {
     case Folder
     case Placemark
     
+    /// The RCKML type that corresponds to this KML feature class.
     var concreteType: KMLFeature.Type {
         switch self {
         case .Folder:
@@ -47,6 +56,7 @@ enum KMLFeatureType : String, CaseIterable {
         }
     }
     
+    /// Tests whether an XML element is a recognized KML type for this library
     static func elementIsRecognizedType(_ xml:AEXMLElement) -> Bool {
         guard let type = KMLFeatureType(rawValue: xml.name) else {
             return false

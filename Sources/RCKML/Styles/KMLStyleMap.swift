@@ -8,14 +8,23 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
 
+/// A wrapper around one or two KMLStyles to provide a standard and
+/// a highlighted version for a given Feature.
+///
+/// This implementation only contains the standard (non-highlighted) style
+/// option. The map can either contain a KMLStyleUrl or a KMLStyle, but
+/// not both.
+///
+/// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#stylemap)
 struct KMLStyleMap {
     var id: String?
     var styleUrl: KMLStyleUrl?
     var style: KMLStyle?
 //    var highlighted: KMLStyleUrl //ignore highlighted    
 }
+
+//MARK:- Internal StyleSelector Protocol Conformance
 extension KMLStyleMap: KmlElement, KMLStyleSelector {
     static var kmlTag: String {
         "StyleMap"

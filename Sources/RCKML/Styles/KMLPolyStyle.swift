@@ -8,37 +8,40 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
-struct KMLPolyStyle {
+/// A style used to determine fill color and whether to draw the outline of a polygon.
+///
+/// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#polystyle)
+public struct KMLPolyStyle {
     var id: String?
-    var fill: Bool
-    var outline: Bool
+    var isFilled: Bool
+    var isOutlined: Bool
     var color: KMLColor?
 }
 
+//MARK:- KmlElement
 extension KMLPolyStyle: KmlElement {
-    static var kmlTag: String {
+    public static var kmlTag: String {
         "PolyStyle"
     }
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
         self.color = xml.optionalKmlChild(ofType: KMLColor.self)
-        self.fill = xml["fill"].bool ?? true
-        self.outline = xml["outline"].bool ?? true
+        self.isFilled = xml["fill"].bool ?? true
+        self.isOutlined = xml["outline"].bool ?? true
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
-        element.addChild(name: "fill", value: (fill ? "1" : "0"))
-        element.addChild(name: "outline", value: (outline ? "1" : "0"))
+        element.addChild(name: "fill", value: (isFilled ? "1" : "0"))
+        element.addChild(name: "outline", value: (isOutlined ? "1" : "0"))
         let _ = color.map({ element.addChild($0.xmlElement) })
         return element
     }
 }
 
+//MARK:- KMLColorStyle
 extension KMLPolyStyle: KMLColorStyle {
     
 }

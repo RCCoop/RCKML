@@ -8,23 +8,27 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
-struct KMLPlacemark {
-    var name: String
-    var description: String?
-    var geometry: KMLGeometry
+/// A Feature that is associated with a Geometry, and the main tool
+/// in a KML file. A placemark includes a Geometry object, and any
+/// descriptive information about it.
+///
+/// For reference, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#placemark)
+public struct KMLPlacemark {
+    public var name: String
+    public var description: String?
+    public var geometry: KMLGeometry
     
-    var styleUrl: KMLStyleUrl?
-    var style: KMLStyle?
+    public var styleUrl: KMLStyleUrl?
+    public var style: KMLStyle?
 }
 
+//MARK:- KmlElement
 extension KMLPlacemark : KmlElement {
-    static var kmlTag: String {
+    public static var kmlTag: String {
         "Placemark"
     }
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.name = try Self.nameFromXml(xml)
         self.description = Self.descriptionFromXml(xml)
@@ -47,7 +51,7 @@ extension KMLPlacemark : KmlElement {
         }
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(name: "name", value: name)
         let _ = description.map({ element.addChild(name: "description", value: $0) })
@@ -58,6 +62,5 @@ extension KMLPlacemark : KmlElement {
     }
 }
 
-extension KMLPlacemark : KMLFeature {
-    
-}
+//MARK:- KMLFeature
+extension KMLPlacemark : KMLFeature {}
