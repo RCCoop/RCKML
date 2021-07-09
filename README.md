@@ -14,11 +14,11 @@ Made for personal use, but who knows what's next!
 
 ## Index:
 
-- [Supported KML Types]()
-- [KMLDocument]()
-- [Reading KML Files]()
-- [Writing KML Files]()
-- [Further To-Do's]()
+- [Supported KML Types](#supported-kml-types)
+- [KMLDocument](#kmldocument)
+- [Reading KML Files](#reading-kml-files)
+- [Writing KML Files](#writing-kml-files)
+- [Further To-Do's](#further-to-dos)
 
 ---
 
