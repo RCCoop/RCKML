@@ -10,17 +10,24 @@ import AEXML
 
 //MARK:- Individual Coordinate Struct
 
-//TODO: Documentation
-
-/// <#Description#>
+/// A single point on Earth represented by latitude and longitude,
+/// plus an optional altitude (expressed in meters above sea level).
+///
+/// In KML instances of KMLGeometry, coordinates are usually represented
+/// as an array of KMLCoordinate, although in reading or writing
+/// geometries to/from KML files they are stored as KMLCoordinateSequence.
+///
+/// - SeeAlso:
+/// KMLCoordinateSequence
 public struct KMLCoordinate {
-    let latitude: Double
-    let longitude: Double
-    let altitude: Double?
+    public let latitude: Double
+    public let longitude: Double
+    public let altitude: Double?
 }
 
+//MARK: CustomStringConvertible
 extension KMLCoordinate: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         if let altitude = altitude {
             return String(format: "%6f,%.6f,%.1f", longitude, latitude, altitude)
         } else {
@@ -29,22 +36,26 @@ extension KMLCoordinate: CustomStringConvertible {
     }
 }
 
-//MARK:- KMLCoordinates XML Struct
+//MARK:- KMLCoordinateSequence
 
-/// <#Description#>
+/// A wrapper around an array of KMLCoordinate used for storage
+/// in KML files. This is generally only used in reading/writing
+/// KML files, whereas the KMLGeometry structs in this library
+/// would use an array of KMLCoordinate instead.
 public struct KMLCoordinateSequence {
-    var coordinates: [KMLCoordinate]
+    public var coordinates: [KMLCoordinate]
 }
 
+//MARK: KmlElement
 extension KMLCoordinateSequence: KmlElement {
-    static var kmlTag: String { "coordinates" }
+    public static var kmlTag: String { "coordinates" }
 
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.coordinates = try Self.parseCoordinates(xml.string)
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         AEXMLElement(name: Self.kmlTag, value: coordinates.map(\.description).joined(separator: "\n"))
     }
     

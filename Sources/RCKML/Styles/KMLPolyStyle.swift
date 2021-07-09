@@ -12,10 +12,10 @@ import AEXML
 ///
 /// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#polystyle)
 public struct KMLPolyStyle {
-    var id: String?
-    var isFilled: Bool
-    var isOutlined: Bool
-    var color: KMLColor?
+    public var id: String?
+    public var isFilled: Bool
+    public var isOutlined: Bool
+    public var color: KMLColor?
 }
 
 //MARK:- KmlElement
@@ -42,7 +42,5 @@ extension KMLPolyStyle: KmlElement {
 }
 
 //MARK:- KMLColorStyle
-extension KMLPolyStyle: KMLColorStyle {
-    
-}
+extension KMLPolyStyle: KMLColorStyle {}
 

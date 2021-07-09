@@ -8,19 +8,18 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
 
 /// A wrapper around a KMLStyleSelector's id, used for referencing that
 /// style from another style.
 ///
 /// For more info, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#styleurl)
 public struct KMLStyleUrl: Hashable {
-    var styleId: String
+    public var styleId: String
 }
 
 //MARK:- Internal StyleSelector conformance
 extension KMLStyleUrl: KMLStyleSelector {
-    var id: String? { nil }
+    public var id: String? { nil }
     
     public static var kmlTag: String {
         "styleUrl"

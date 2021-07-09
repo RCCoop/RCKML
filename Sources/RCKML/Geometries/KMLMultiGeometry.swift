@@ -8,17 +8,19 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
 
-struct KMLMultiGeometry {
-    var geometries: [KMLGeometry]
+/// A geometry type representing a collection of other geometries.
+///
+/// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#multigeometry)
+public struct KMLMultiGeometry {
+    public var geometries: [KMLGeometry]
 }
 
 //MARK: KMLElement
 
 extension KMLMultiGeometry: KmlElement {
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         geometries = try xml.children.compactMap({ xmlChild -> KMLGeometry? in
             guard let type = KMLGeometryType(rawValue: xmlChild.name)
@@ -30,7 +32,7 @@ extension KMLMultiGeometry: KmlElement {
         })
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         for geo in geometries {
             element.addChild(geo.xmlElement)
@@ -42,5 +44,5 @@ extension KMLMultiGeometry: KmlElement {
 //MARK: KMLGeometry
 
 extension KMLMultiGeometry: KMLGeometry {
-    static var geometryType: KMLGeometryType { .MultiGeometry }
+    public static var geometryType: KMLGeometryType { .MultiGeometry }
 }

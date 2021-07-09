@@ -12,9 +12,9 @@ import AEXML
 ///
 /// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#linestyle)
 public struct KMLLineStyle {
-    var id: String?
-    var width: Double
-    var color: KMLColor?
+    public var id: String?
+    public var width: Double
+    public var color: KMLColor?
 }
 
 //MARK:- KmlElement

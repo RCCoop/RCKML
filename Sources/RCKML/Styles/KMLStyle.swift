@@ -18,11 +18,11 @@ import AEXML
 ///
 /// For definition, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#style)
 public struct KMLStyle {
-    var id: String?
-    var lineStyle: KMLLineStyle?
-    var polyStyle: KMLPolyStyle?
+    public var id: String?
+    public var lineStyle: KMLLineStyle?
+    public var polyStyle: KMLPolyStyle?
     
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         if lineStyle == nil && polyStyle == nil {
             return true
         } else if lineStyle?.color == nil && polyStyle?.color == nil {

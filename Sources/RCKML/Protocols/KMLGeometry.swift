@@ -19,7 +19,7 @@ public protocol KMLGeometry: KmlElement {
 }
 
 extension KMLGeometry {
-    static var kmlTag: String {
+    public static var kmlTag: String {
         geometryType.rawValue
     }
 }

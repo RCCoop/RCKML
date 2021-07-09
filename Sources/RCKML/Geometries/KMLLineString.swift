@@ -8,25 +8,25 @@
 import Foundation
 import AEXML
 
-//TODO: Documentation
-
+/// A series of KMLCoordinates connected in order to form
+/// a line on the map.
+///
+/// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#linestring)
 public struct KMLLineString {
-    
     public let coordinates: [KMLCoordinate]
-    
 }
 
 //MARK: KMLElement
 
 extension KMLLineString : KmlElement {
     
-    init(xml: AEXMLElement) throws {
+    public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         let kmlCoords = try xml.requiredKmlChild(ofType: KMLCoordinateSequence.self)
         self.coordinates = kmlCoords.coordinates
     }
     
-    var xmlElement: AEXMLElement {
+    public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         let coordRep = KMLCoordinateSequence(coordinates: coordinates)
         element.addChild(coordRep.xmlElement)
@@ -38,7 +38,7 @@ extension KMLLineString : KmlElement {
 //MARK: KMLGeometry
 
 extension KMLLineString : KMLGeometry {
-    static var geometryType: KMLGeometryType {
+    public static var geometryType: KMLGeometryType {
         .LineString
     }
 }
