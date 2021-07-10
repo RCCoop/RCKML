@@ -8,12 +8,6 @@
 import Foundation
 import AEXML
 
-public enum KMLError: Error {
-    case xmlTagMismatch
-    case coordinateParseFailed
-    case missingRequiredElement(elementName: String)
-}
-
 //MARK:- KML Element
 
 
