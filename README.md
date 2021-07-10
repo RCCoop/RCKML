@@ -2,13 +2,14 @@
 
 A library for reading and writing KML files in Swift. Nothing too fancy, but also not too basic.
 
-Made for personal use, but who knows what's next!
+>Made for personal use, but who knows what's next!
 
 ---
 
 ### Dependencies
 
 - [AEXML](https://github.com/tadija/AEXML) for reading and writing XML files
+- [ZipFoundation](https://github.com/weichsel/ZIPFoundation) for dealing with compression for KMZ data.
 
 ---
 
@@ -45,7 +46,7 @@ Made for personal use, but who knows what's next!
     - KML Color
     - Coordinates
 
-Not all types are supported with all options available to KML files. I've focused on types and features that can be used in MapKit for now.
+>Not all types are supported with all options available to KML files. I've focused on types and features that can be used in MapKit for now.
 
 ---
 
@@ -72,10 +73,14 @@ public struct KMLDocument {
 let fileUrl = ...
 let fileData = try Data(contentsOf: fileUrl)
 let kmlString = try? String(contentsOf: fileUrl, encoding: .utf8)
+let kmzFileUrl = ...
+let kmzFileData = try Data(contentsOf: kmzFileUrl)
 
 let documentFromData = try? KMLDocument(data: fileData)
 let documentFromFileUrl = try? KMLDocument(url: fileUrl)
 let documentFromString = try? KMLDocument(kmlString: kmlString)
+let documentFromKmzFile = try? KMLDocument(url: kmzFileUrl) //init(url:) works with either KML or KMZ files.
+let documentFromKmzData = try? KMLDocument(kmzData: kmzFileData)
 ```
 
 ---
@@ -87,13 +92,13 @@ let kmlDoc = KMLDocument(...)
 
 let asData = kmlDoc.kmlData()
 let asString = kmlDoc.kmlString()
+let asKmzData = kmlDoc.kmzData()
 ```
 
 ---
 
 ## Further To-Do's
 
-- Handle KMZ files
 - Documentation: How to add further KML type support
 
 ---

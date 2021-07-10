@@ -13,6 +13,25 @@
             print(stringRep)
         }
         
+        func testKMZ() {
+            guard let doc = getTestDocument() else {
+                return
+            }
+            
+            guard let kmzData = doc.kmzData() else {
+                XCTFail("Couldn't produce KMZ data")
+                return
+            }
+            
+            guard let unzipped = try? KMLDocument(kmzData: kmzData) else {
+                XCTFail("Failed to unzip KMZ document")
+                return
+            }
+            
+            XCTAssertEqual(doc.features.count, unzipped.features.count)
+            XCTAssertEqual(doc.placemarksRecursive.count, unzipped.placemarksRecursive.count)
+        }
+        
         func testMutation() {
             guard var doc = getTestDocument() else {
                 return
