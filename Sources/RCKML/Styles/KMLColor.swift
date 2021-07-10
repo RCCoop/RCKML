@@ -83,7 +83,7 @@ public extension KMLColor {
     #endif
     
     #if canImport(SwiftUI)
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 10.15, *)
     var color: Color {
         Color(red: red, green: green, blue: blue)
             .opacity(alpha)
