@@ -7,6 +7,7 @@
 
 import Foundation
 import AEXML
+import ZIPFoundation
 
 /// A root object for reading KML from file, or writing to file.
 ///
@@ -74,6 +75,26 @@ public extension KMLDocument {
         kmlString().data(using: .utf8)
     }
     
+    /// Returns the file data representation as a KMZ file.
+    func kmzData() -> Data? {
+        guard let normalData = kmlData(),
+              let archive = Archive(data: Data(), accessMode: .create, preferredEncoding: .utf8)
+        else {
+            return nil
+        }
+        
+        do {
+            try archive.addEntry(with: "doc.kml", type: .file, uncompressedSize: UInt32(normalData.count)) { (position, size) -> Data in
+                return normalData.subdata(in: position..<position+size)
+            }
+        } catch {
+            print("KMLDocument.kmzData() failed to add doc.kml entry: \(error.localizedDescription)")
+            return nil
+        }
+        
+        return archive.data
+    }
+    
     /// Given a KMLStyleUrl reference from a feature contained in this document,
     /// returns the global style that is referenced by the url.
     func getStyleFromUrl(_ styleUrl: KMLStyleUrl) -> KMLStyle? {
@@ -107,6 +128,20 @@ extension KMLDocument {
         try self.init(xml: documentElement)
     }
     
+    init(kmzData: Data) throws {
+        var extractedData = Data()
+        
+        guard let archive = Archive(data: kmzData, accessMode: .read, preferredEncoding: .utf8),
+              let kmlEntry = archive.first(where: { $0.path.hasSuffix("kml") }),
+              let _ = try? archive.extract(kmlEntry, consumer: { extractedData += $0 }),
+              !extractedData.isEmpty
+        else {
+            throw KMLError.kmzReadError
+        }
+
+        try self.init(data: extractedData)
+    }
+    
     init(kmlString: String) throws {
         guard let data = kmlString.data(using: .utf8) else {
             throw KMLError.missingRequiredElement(elementName: "xml")
@@ -114,9 +149,19 @@ extension KMLDocument {
         try self.init(data: data)
     }
     
+    /// Initializes a KMLDocument from a fileUrl, which must have a
+    /// path extension of either "KML" or "KMZ" (neither are case-sensitive).
+    /// - Throws: KML reading errors.
     init(url: URL) throws {
         let data = try Data(contentsOf: url)
-        try self.init(data: data)
+        switch url.pathExtension.lowercased() {
+        case "kml":
+            try self.init(data: data)
+        case "kmz":
+            try self.init(kmzData: data)
+        default:
+            throw KMLError.unknownFileExtension(extension: url.pathExtension)
+        }
     }
     
     /// Given the root XML element of a KML file, this returns the `styles`
