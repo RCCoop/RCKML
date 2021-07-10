@@ -47,10 +47,18 @@ extension KMLPolygon : KmlElement {
     
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        element.addChild(name: Self.outerBoundaryKey, value: outerBoundaryIs.xmlElement.xml)
-        innerBoundaryIs?.forEach({ oneInner in
-            element.addChild(name: Self.innerBoundaryKey, value: oneInner.xmlElement.xml)
+        
+        //Outer Boundary Ring
+        let outerRingElement = AEXMLElement(name: Self.outerBoundaryKey)
+        outerRingElement.addChild(outerBoundaryIs.xmlElement)
+        element.addChild(outerRingElement)
+        
+        innerBoundaryIs?.forEach({ innerBound in
+            let innerElement = AEXMLElement(name: Self.innerBoundaryKey)
+            innerElement.addChild(innerBound.xmlElement)
+            element.addChild(innerElement)
         })
+        
         return element
     }
 }
