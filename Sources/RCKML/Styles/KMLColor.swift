@@ -65,7 +65,6 @@ public extension KMLColor {
         return String(format: "%02lX%02lX%02lX%02lX", lroundf(Float(alpha) * 255), lroundf(Float(blue) * 255), lroundf(Float(green) * 255), lroundf(Float(red) * 255))
     }
     
-    @available(iOS 13.0, *)
     var cgColor: CGColor {
         CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
     }
@@ -83,7 +82,6 @@ public extension KMLColor {
     #endif
     
     #if canImport(SwiftUI)
-    @available(iOS 13.0, macOS 10.15, *)
     var color: Color {
         Color(red: red, green: green, blue: blue)
             .opacity(alpha)
