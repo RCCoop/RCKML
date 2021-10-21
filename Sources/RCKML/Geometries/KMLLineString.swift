@@ -14,6 +14,10 @@ import AEXML
 /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#linestring)
 public struct KMLLineString {
     public let coordinates: [KMLCoordinate]
+    
+    public init(coordinates: [KMLCoordinate]) {
+        self.coordinates = coordinates
+    }
 }
 
 //MARK: KMLElement

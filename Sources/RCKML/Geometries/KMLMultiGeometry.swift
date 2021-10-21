@@ -14,6 +14,10 @@ import AEXML
 /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#multigeometry)
 public struct KMLMultiGeometry {
     public var geometries: [KMLGeometry]
+    
+    public init(geometries: [KMLGeometry]) {
+        self.geometries = geometries
+    }
 }
 
 //MARK: KMLElement

@@ -32,7 +32,7 @@ let package = Package(
         .testTarget(
             name: "RCKMLTests",
             dependencies: ["RCKML", "AEXML", "ZIPFoundation"],
-            resources: [.process("GoogleTest.kml"), .process("GoogleTest.json"), .process("GoogleTest.kmz")]
+            resources: [.process("GoogleTest.kml"), .process("GoogleTest.json")]
         ),
     ]
 )

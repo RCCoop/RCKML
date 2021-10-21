@@ -102,13 +102,13 @@ internal extension KMLColor {
     init(_ kmlString: String) throws {
         let formattedString = kmlString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         let scanner = Scanner(string: formattedString)
-        var hexNumber :UInt32 = 0
+        var hexNumber :UInt64 = 0
         let stringLength = formattedString.count
 
         guard stringLength == 8 else {
             throw ColorError.stringLength(formattedString)
         }
-        guard scanner.scanHexInt32(&hexNumber) else {
+        guard scanner.scanHexInt64(&hexNumber) else {
             throw ColorError.scannerFailure(formattedString)
         }
 

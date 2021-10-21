@@ -16,6 +16,14 @@ public struct KMLFolder {
     public var name: String
     public var description: String?
     public var features: [KMLFeature]
+    
+    public init(name: String,
+                description: String? = nil,
+                features: [KMLFeature] = []) {
+        self.name = name
+        self.description = description
+        self.features = features
+    }
 }
 
 //MARK:- KmlElement

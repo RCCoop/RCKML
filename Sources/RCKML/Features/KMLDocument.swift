@@ -23,6 +23,16 @@ public struct KMLDocument {
     public var description: String?
     public var features: [KMLFeature]
     public var styles: [KMLStyleUrl: KMLStyleSelector]
+    
+    public init(name: String? = nil,
+                description: String? = nil,
+                features: [KMLFeature] = [],
+                styles: [KMLStyleUrl: KMLStyleSelector] = [:]) {
+        self.name = name
+        self.description = description
+        self.features = features
+        self.styles = styles
+    }
 }
 
 //MARK:- KmlElement
@@ -117,7 +127,7 @@ public extension KMLDocument {
 //MARK:- Initializers
 extension KMLDocument {
     
-    init(data: Data) throws {
+    public init(data: Data) throws {
         let xmlDoc = try AEXMLDocument(xml: data)
         guard let documentElement = xmlDoc.firstDescendant(where: { $0.name == Self.kmlTag }) else {
             throw KMLError.missingRequiredElement(elementName: "Document")
@@ -128,7 +138,7 @@ extension KMLDocument {
         try self.init(xml: documentElement)
     }
     
-    init(kmzData: Data) throws {
+    public init(kmzData: Data) throws {
         var extractedData = Data()
         
         guard let archive = Archive(data: kmzData, accessMode: .read, preferredEncoding: .utf8),
@@ -142,7 +152,7 @@ extension KMLDocument {
         try self.init(data: extractedData)
     }
     
-    init(kmlString: String) throws {
+    public init(kmlString: String) throws {
         guard let data = kmlString.data(using: .utf8) else {
             throw KMLError.missingRequiredElement(elementName: "xml")
         }
@@ -152,7 +162,7 @@ extension KMLDocument {
     /// Initializes a KMLDocument from a fileUrl, which must have a
     /// path extension of either "KML" or "KMZ" (neither are case-sensitive).
     /// - Throws: KML reading errors.
-    init(url: URL) throws {
+    public init(url: URL) throws {
         let data = try Data(contentsOf: url)
         switch url.pathExtension.lowercased() {
         case "kml":

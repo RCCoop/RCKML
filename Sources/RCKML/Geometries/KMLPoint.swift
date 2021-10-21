@@ -14,6 +14,16 @@ import AEXML
 /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#point)
 public struct KMLPoint {
     public var coordinate: KMLCoordinate
+    
+    public init(coordinate: KMLCoordinate) {
+        self.coordinate = coordinate
+    }
+    
+    public init(latitude: Double,
+                longitude: Double,
+                altitude: Double? = nil) {
+        self.coordinate = KMLCoordinate(latitude: latitude, longitude: longitude, altitude: altitude)
+    }
 }
 
 //MARK: KMLElement

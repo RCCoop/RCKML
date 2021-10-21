@@ -20,6 +20,18 @@ public struct KMLPlacemark {
     
     public var styleUrl: KMLStyleUrl?
     public var style: KMLStyle?
+    
+    public init(name: String,
+                description: String? = nil,
+                geometry: KMLGeometry,
+                styleUrl: KMLStyleUrl? = nil,
+                style: KMLStyle? = nil) {
+        self.name = name
+        self.description = description
+        self.geometry = geometry
+        self.styleUrl = styleUrl
+        self.style = style
+    }
 }
 
 //MARK:- KmlElement

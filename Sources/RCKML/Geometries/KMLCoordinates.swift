@@ -23,6 +23,14 @@ public struct KMLCoordinate {
     public let latitude: Double
     public let longitude: Double
     public let altitude: Double?
+    
+    public init(latitude: Double,
+                longitude: Double,
+                altitude: Double? = nil) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.altitude = altitude
+    }
 }
 
 //MARK: CustomStringConvertible
@@ -44,6 +52,10 @@ extension KMLCoordinate: CustomStringConvertible {
 /// would use an array of KMLCoordinate instead.
 public struct KMLCoordinateSequence {
     public var coordinates: [KMLCoordinate]
+    
+    public init(coordinates: [KMLCoordinate]) {
+        self.coordinates = coordinates
+    }
 }
 
 //MARK: KmlElement

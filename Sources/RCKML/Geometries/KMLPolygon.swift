@@ -21,6 +21,11 @@ public struct KMLPolygon {
     /// polygon, which represent holes in the polygon.
     public let innerBoundaryIs: [LinearRing]?
     
+    public init(outerBoundary: LinearRing,
+                innerBoundaries: [LinearRing]? = nil) {
+        self.outerBoundaryIs = outerBoundary
+        self.innerBoundaryIs = innerBoundaries
+    }
 }
 
 //MARK: KMLElement
@@ -78,6 +83,10 @@ extension KMLPolygon {
     /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#polygon)
     public struct LinearRing {
         public let coordinates: [KMLCoordinate]
+        
+        public init(coordinates: [KMLCoordinate]) {
+            self.coordinates = coordinates
+        }
     }
 }
 
