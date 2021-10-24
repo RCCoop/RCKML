@@ -5,10 +5,10 @@
 //  Created by Ryan Linn on 6/16/21.
 //
 
-import Foundation
 import AEXML
+import Foundation
 
-//MARK:- Geometry Protocol
+// MARK: - Geometry Protocol
 
 /// Any KmlElement type to be used in *Geometry* objects of a KML document.
 ///
@@ -18,8 +18,8 @@ public protocol KMLGeometry: KmlElement {
     static var geometryType: KMLGeometryType { get }
 }
 
-extension KMLGeometry {
-    public static var kmlTag: String {
+public extension KMLGeometry {
+    static var kmlTag: String {
         geometryType.rawValue
     }
 }

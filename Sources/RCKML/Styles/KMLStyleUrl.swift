@@ -5,9 +5,8 @@
 //  Created by Ryan Linn on 6/18/21.
 //
 
-import Foundation
 import AEXML
-
+import Foundation
 
 /// A wrapper around a KMLStyleSelector's id, used for referencing that
 /// style from another style.
@@ -17,14 +16,15 @@ public struct KMLStyleUrl: Hashable {
     public var styleId: String
 }
 
-//MARK:- Internal StyleSelector conformance
+// MARK: - Internal StyleSelector conformance
+
 extension KMLStyleUrl: KMLStyleSelector {
     public var id: String? { nil }
-    
+
     public static var kmlTag: String {
         "styleUrl"
     }
-    
+
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         var urlString = xml.string
@@ -33,9 +33,8 @@ extension KMLStyleUrl: KMLStyleSelector {
         }
         self.styleId = urlString
     }
-    
+
     public var xmlElement: AEXMLElement {
         AEXMLElement(name: Self.kmlTag, value: "#" + styleId)
     }
-    
 }

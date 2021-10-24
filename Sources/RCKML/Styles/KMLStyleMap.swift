@@ -5,9 +5,8 @@
 //  Created by Ryan Linn on 6/18/21.
 //
 
-import Foundation
 import AEXML
-
+import Foundation
 
 /// A wrapper around one or two KMLStyles to provide a standard and
 /// a highlighted version for a given Feature.
@@ -21,15 +20,16 @@ struct KMLStyleMap {
     var id: String?
     var styleUrl: KMLStyleUrl?
     var style: KMLStyle?
-//    var highlighted: KMLStyleUrl //ignore highlighted    
+//    var highlighted: KMLStyleUrl //ignore highlighted
 }
 
-//MARK:- Internal StyleSelector Protocol Conformance
+// MARK: - Internal StyleSelector Protocol Conformance
+
 extension KMLStyleMap: KmlElement, KMLStyleSelector {
     static var kmlTag: String {
         "StyleMap"
     }
-    
+
     init(xml: AEXMLElement) throws {
         try? Self.verifyXmlTag(xml)
         self.id = xml.attributes["id"]
@@ -41,12 +41,11 @@ extension KMLStyleMap: KmlElement, KMLStyleSelector {
             }
         }
     }
-    
+
     var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
-        let _ = style.map({ element.addChild($0.xmlElement) })
-        let _ = styleUrl.map({ element.addChild($0.xmlElement) })
+        _ = style.map { element.addChild($0.xmlElement) }
+        _ = styleUrl.map { element.addChild($0.xmlElement) }
         return element
     }
 }
-

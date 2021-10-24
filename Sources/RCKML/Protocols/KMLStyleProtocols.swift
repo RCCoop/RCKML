@@ -5,8 +5,8 @@
 //  Created by Ryan Linn on 6/18/21.
 //
 
-import Foundation
 import AEXML
+import Foundation
 
 /// Protocol for conforming to the abstract KML element type *StyleSelector*,
 /// which is the base type for *Style* and *StyleMap*.

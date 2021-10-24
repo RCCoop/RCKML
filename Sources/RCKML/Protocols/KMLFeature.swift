@@ -5,21 +5,22 @@
 //  Created by Ryan Linn on 6/18/21.
 //
 
-import Foundation
 import AEXML
+import Foundation
 
 /// Any KmlElement type to be used in *Feature* objects of a KML document.
 ///
 /// For definition, see [KML spec](https://developers.google.com/kml/documentation/kmlreference#feature)
-public protocol KMLFeature : KmlElement {
+public protocol KMLFeature: KmlElement {
     /// A user-visible name for the feature.
     var name: String { get }
-    
+
     /// An optional text description of the feature.
     var description: String? { get }
 }
 
-//MARK: Initializer Helpers
+// MARK: Initializer Helpers
+
 internal extension KMLFeature {
     /// Helper function for use when creating KMLFeature instances in `KmlFeature.init(xml:)`,
     /// this function returns the required *name* attribute of the KML feature.
@@ -27,16 +28,16 @@ internal extension KMLFeature {
     /// - Parameter xml: The XML element being used to create this KMLFeature
     /// - Throws: XML Error
     /// - Returns: Name value of the KML element.
-    static func nameFromXml(_ xml:AEXMLElement) throws -> String {
+    static func nameFromXml(_ xml: AEXMLElement) throws -> String {
         try xml.requiredXmlChild(name: "name").string
     }
-    
+
     /// Helper function for use when creating KMLFeature instances in `KmlFeature.init(xml:)`,
     /// this function returns the optional *description* attribute of the KML feature
     ///
     /// - Parameter xml: The XML element being used to create this KMLFeature
     /// - Returns: Description value of the KML element.
-    static func descriptionFromXml(_ xml:AEXMLElement) -> String? {
+    static func descriptionFromXml(_ xml: AEXMLElement) -> String? {
         xml.optionalXmlChild(name: "description")?.string
     }
 }

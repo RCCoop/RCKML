@@ -5,10 +5,10 @@
 //  Created by Ryan Linn on 6/17/21.
 //
 
-import Foundation
 import AEXML
+import Foundation
 
-//MARK:- Individual Coordinate Struct
+// MARK: - Individual Coordinate Struct
 
 /// A single point on Earth represented by latitude and longitude,
 /// plus an optional altitude (expressed in meters above sea level).
@@ -23,17 +23,19 @@ public struct KMLCoordinate {
     public let latitude: Double
     public let longitude: Double
     public let altitude: Double?
-    
+
     public init(latitude: Double,
                 longitude: Double,
-                altitude: Double? = nil) {
+                altitude: Double? = nil)
+    {
         self.latitude = latitude
         self.longitude = longitude
         self.altitude = altitude
     }
 }
 
-//MARK: CustomStringConvertible
+// MARK: CustomStringConvertible
+
 extension KMLCoordinate: CustomStringConvertible {
     public var description: String {
         if let altitude = altitude {
@@ -44,7 +46,7 @@ extension KMLCoordinate: CustomStringConvertible {
     }
 }
 
-//MARK:- KMLCoordinateSequence
+// MARK: - KMLCoordinateSequence
 
 /// A wrapper around an array of KMLCoordinate used for storage
 /// in KML files. This is generally only used in reading/writing
@@ -52,13 +54,14 @@ extension KMLCoordinate: CustomStringConvertible {
 /// would use an array of KMLCoordinate instead.
 public struct KMLCoordinateSequence {
     public var coordinates: [KMLCoordinate]
-    
+
     public init(coordinates: [KMLCoordinate]) {
         self.coordinates = coordinates
     }
 }
 
-//MARK: KmlElement
+// MARK: KmlElement
+
 extension KMLCoordinateSequence: KmlElement {
     public static var kmlTag: String { "coordinates" }
 
@@ -66,12 +69,12 @@ extension KMLCoordinateSequence: KmlElement {
         try Self.verifyXmlTag(xml)
         self.coordinates = try Self.parseCoordinates(xml.string)
     }
-    
+
     public var xmlElement: AEXMLElement {
         AEXMLElement(name: Self.kmlTag, value: coordinates.map(\.description).joined(separator: "\n"))
     }
-    
-    private static func parseCoordinates(_ coordString:String) throws -> [KMLCoordinate] {
+
+    private static func parseCoordinates(_ coordString: String) throws -> [KMLCoordinate] {
         let splits = coordString.components(separatedBy: .whitespacesAndNewlines)
         let coords = splits.compactMap { str -> KMLCoordinate? in
             if str.isEmpty { return nil }
@@ -83,7 +86,7 @@ extension KMLCoordinateSequence: KmlElement {
             let alt = components.count > 2 ? Double(components[2]) : nil
             return KMLCoordinate(latitude: lat, longitude: long, altitude: alt)
         }
-        
+
         if coords.isEmpty {
             throw KMLError.coordinateParseFailed
         }

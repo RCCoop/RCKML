@@ -5,37 +5,35 @@
 //  Created by Ryan Linn on 6/18/21.
 //
 
-import Foundation
 import AEXML
-
+import Foundation
 
 /// A geometry type representing a collection of other geometries.
 ///
 /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#multigeometry)
 public struct KMLMultiGeometry {
     public var geometries: [KMLGeometry]
-    
+
     public init(geometries: [KMLGeometry]) {
         self.geometries = geometries
     }
 }
 
-//MARK: KMLElement
+// MARK: KMLElement
 
 extension KMLMultiGeometry: KmlElement {
-    
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        geometries = try xml.children.compactMap({ xmlChild -> KMLGeometry? in
+        geometries = try xml.children.compactMap { xmlChild -> KMLGeometry? in
             guard let type = KMLGeometryType(rawValue: xmlChild.name)
             else {
                 return nil
             }
             let object = try type.concreteType.init(xml: xmlChild)
             return object
-        })
+        }
     }
-    
+
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         for geo in geometries {
@@ -45,7 +43,7 @@ extension KMLMultiGeometry: KmlElement {
     }
 }
 
-//MARK: KMLGeometry
+// MARK: KMLGeometry
 
 extension KMLMultiGeometry: KMLGeometry {
     public static var geometryType: KMLGeometryType { .MultiGeometry }
