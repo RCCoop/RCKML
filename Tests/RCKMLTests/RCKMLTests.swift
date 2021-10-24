@@ -7,28 +7,29 @@ final class RCKMLTests: XCTestCase {
         guard let doc = getTestDocument() else {
             return
         }
-            
-        let stringRep = doc.kmlString()
-        print(stringRep)
+        
+        do {
+            let stringRep = try doc.kmlString()
+            print(stringRep)
+        } catch {
+            XCTFail("Failed to write doc.kmlString: \(error.localizedDescription)")
+        }
     }
         
     func testKMZ() {
         guard let doc = getTestDocument() else {
             return
         }
-            
-        guard let kmzData = doc.kmzData() else {
-            XCTFail("Couldn't produce KMZ data")
-            return
+        
+        do {
+            let kmzData = try doc.kmzData()
+            let unzipped = try KMLDocument(kmzData: kmzData)
+            XCTAssertEqual(doc.features.count, unzipped.features.count)
+            XCTAssertEqual(doc.placemarksRecursive.count, unzipped.placemarksRecursive.count)
+
+        } catch {
+            XCTFail("KMZ Error: \(error)")
         }
-            
-        guard let unzipped = try? KMLDocument(kmzData: kmzData) else {
-            XCTFail("Failed to unzip KMZ document")
-            return
-        }
-            
-        XCTAssertEqual(doc.features.count, unzipped.features.count)
-        XCTAssertEqual(doc.placemarksRecursive.count, unzipped.placemarksRecursive.count)
     }
         
     func testMutation() {

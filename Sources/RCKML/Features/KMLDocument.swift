@@ -76,36 +76,38 @@ extension KMLDocument: KMLContainer {}
 
 public extension KMLDocument {
     /// Returns the full string representation of the KML file.
-    func kmlString() -> String {
+    func kmlString() throws -> String {
         let xmlDoc = AEXMLDocument()
         let kmlRoot = xmlDoc.addChild(name: "kml", attributes: ["xmlns": "http://www.opengis.net/kml/2.2"])
         kmlRoot.addChild(xmlElement)
+        _ = try xmlDoc.error.map { throw $0 }
+        _ = try kmlRoot.error.map { throw $0 }
         return xmlDoc.xml
     }
     
     /// Returns the file data representation of the KML file.
-    func kmlData() -> Data? {
-        kmlString().data(using: .utf8)
+    func kmlData() throws -> Data {
+        guard let result = try kmlString().data(using: .utf8) else {
+            throw KMLError.couldntConvertStringData
+        }
+        return result
     }
     
     /// Returns the file data representation as a KMZ file.
-    func kmzData() -> Data? {
-        guard let normalData = kmlData(),
-              let archive = Archive(data: Data(), accessMode: .create, preferredEncoding: .utf8)
-        else {
-            return nil
+    func kmzData() throws -> Data {
+        guard let archive = Archive(data: Data(), accessMode: .create, preferredEncoding: .utf8) else {
+            throw KMLError.kmzWriteError
+        }
+
+        let normalData = try kmlData()
+        try archive.addEntry(with: "doc.kml", type: .file, uncompressedSize: UInt32(normalData.count)) { position, size -> Data in
+            normalData.subdata(in: position ..< position + size)
         }
         
-        do {
-            try archive.addEntry(with: "doc.kml", type: .file, uncompressedSize: UInt32(normalData.count)) { position, size -> Data in
-                normalData.subdata(in: position ..< position + size)
-            }
-        } catch {
-            print("KMLDocument.kmzData() failed to add doc.kml entry: \(error.localizedDescription)")
-            return nil
+        guard let result = archive.data else {
+            throw KMLError.kmzWriteError
         }
-        
-        return archive.data
+        return result
     }
     
     /// Given a KMLStyleUrl reference from a feature contained in this document,

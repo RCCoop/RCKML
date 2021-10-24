@@ -13,4 +13,6 @@ public enum KMLError: Error {
     case missingRequiredElement(elementName: String)
     case unknownFileExtension(extension: String)
     case kmzReadError
+    case kmzWriteError
+    case couldntConvertStringData
 }
