@@ -21,6 +21,15 @@ struct KMLStyleMap {
     var styleUrl: KMLStyleUrl?
     var style: KMLStyle?
 //    var highlighted: KMLStyleUrl //ignore highlighted
+
+    public init(id: String? = nil,
+         styleUrl: KMLStyleUrl? = nil,
+         style: KMLStyle? = nil)
+    {
+        self.id = id
+        self.styleUrl = styleUrl
+        self.style = style
+    }
 }
 
 // MARK: - Internal StyleSelector Protocol Conformance

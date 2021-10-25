@@ -16,6 +16,17 @@ public struct KMLPolyStyle {
     public var isFilled: Bool
     public var isOutlined: Bool
     public var color: KMLColor?
+
+    public init(id: String?,
+         isFilled: Bool = false,
+         isOutlined: Bool = true,
+         color: KMLColor? = nil)
+    {
+        self.id = id
+        self.isFilled = isFilled
+        self.isOutlined = isOutlined
+        self.color = color
+    }
 }
 
 // MARK: - KmlElement

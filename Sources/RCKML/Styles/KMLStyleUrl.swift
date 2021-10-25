@@ -14,6 +14,10 @@ import Foundation
 /// For more info, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#styleurl)
 public struct KMLStyleUrl: Hashable {
     public var styleId: String
+
+    public init(id: String? = nil) {
+        self.id = id
+    }
 }
 
 // MARK: - Internal StyleSelector conformance

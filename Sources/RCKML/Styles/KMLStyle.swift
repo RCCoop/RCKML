@@ -29,6 +29,15 @@ public struct KMLStyle {
         }
         return false
     }
+
+    public init(id: String? = nil,
+         lineStyle: KMLLineStyle? = nil,
+         polyStyle: KMLPolyStyle? = nil)
+    {
+        self.id = id
+        self.lineStyle = lineStyle
+        self.polyStyle = polyStyle
+    }
 }
 
 // MARK: - Internal StyleSelector Protocol Conformance

@@ -15,6 +15,15 @@ public struct KMLLineStyle {
     public var id: String?
     public var width: Double
     public var color: KMLColor?
+
+    public init(id: String? = nil,
+         width: Double = 1.0,
+         color: KMLColor? = nil)
+    {
+        self.id = id
+        self.width = width
+        self.color = color
+    }
 }
 
 // MARK: - KmlElement

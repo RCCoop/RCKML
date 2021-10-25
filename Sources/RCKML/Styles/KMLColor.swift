@@ -36,6 +36,17 @@ public struct KMLColor {
 
     /// A value between 0.0 and 1.0 representing the alpha element of the color
     var alpha: Double
+
+    public init(red: Double,
+                green: Double,
+                blue: Double,
+                alpha: Double = 1.0)
+    {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
 }
 
 // MARK: - KmlElement
@@ -74,11 +85,30 @@ public extension KMLColor {
     var uiColor: UIColor {
         UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
     }
+
+    init(_ uiColor: UIColor) {
+        var red: CGFloat = 0.0
+        var green: CGFloat = 0.0
+        var blue: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        self.red = Double(red)
+        self.green = Double(green)
+        self.blue = Double(blue)
+        self.alpha = Double(alpha)
+    }
     #endif
 
     #if canImport(AppKit)
     var nsColor: NSColor {
         NSColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+    }
+
+    init(_ nsColor: NSColor) {
+        red = Double(nsColor.redComponent)
+        green = Double(nsColor.greenComponent)
+        blue = Double(nsColor.blueComponent)
+        alpha = Double(nsColor.alphaComponent)
     }
     #endif
 
