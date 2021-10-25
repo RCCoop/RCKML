@@ -15,8 +15,8 @@ import Foundation
 public struct KMLStyleUrl: Hashable {
     public var styleId: String
 
-    public init(id: String? = nil) {
-        self.id = id
+    public init(styleId: String) {
+        self.styleId = styleId
     }
 }
 
