@@ -16,7 +16,7 @@ public protocol KMLFeature: KmlElement {
     var name: String { get }
 
     /// An optional text description of the feature.
-    var description: String? { get }
+    var featureDescription: String? { get }
 }
 
 // MARK: Initializer Helpers

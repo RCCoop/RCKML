@@ -14,15 +14,15 @@ import Foundation
 /// For reference, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#folder)
 public struct KMLFolder {
     public var name: String
-    public var description: String?
+    public var featureDescription: String?
     public var features: [KMLFeature]
 
     public init(name: String,
-                description: String? = nil,
+                featureDescription: String? = nil,
                 features: [KMLFeature] = [])
     {
         self.name = name
-        self.description = description
+        self.featureDescription = featureDescription
         self.features = features
     }
 }
@@ -37,14 +37,14 @@ extension KMLFolder: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.name = try Self.nameFromXml(xml)
-        self.description = Self.descriptionFromXml(xml)
+        self.featureDescription = Self.descriptionFromXml(xml)
         self.features = try Self.features(from: xml)
     }
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(name: "name", value: name)
-        _ = description.map { element.addChild(name: "description", value: $0) }
+        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
         for item in features {
             element.addChild(item.xmlElement)
         }

@@ -20,17 +20,17 @@ import ZIPFoundation
 /// To export a KMLDocument, use the functions `kmlString()` or `kmlData()`
 public struct KMLDocument {
     public var name: String?
-    public var description: String?
+    public var featureDescription: String?
     public var features: [KMLFeature]
     public var styles: [KMLStyleUrl: KMLStyleSelector]
     
     public init(name: String? = nil,
-                description: String? = nil,
+                featureDescription: String? = nil,
                 features: [KMLFeature] = [],
                 styles: [KMLStyleUrl: KMLStyleSelector] = [:])
     {
         self.name = name
-        self.description = description
+        self.featureDescription = featureDescription
         self.features = features
         self.styles = styles
     }
@@ -48,13 +48,13 @@ extension KMLDocument: KmlElement {
         self.features = try Self.features(from: xml)
         self.name = xml.optionalXmlChild(name: "name")?.string
         self.styles = try Self.kmlStylesInElement(xml)
-        self.description = xml.optionalXmlChild(name: "description")?.string
+        self.featureDescription = xml.optionalXmlChild(name: "description")?.string
     }
         
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         _ = name.map { element.addChild(name: "name", value: $0) }
-        _ = description.map { element.addChild(name: "description", value: $0) }
+        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
         
         for (_, style) in styles {
             element.addChild(style.xmlElement)
@@ -131,7 +131,7 @@ public extension KMLDocument {
 // MARK: - Initializers
 
 public extension KMLDocument {
-    init(data: Data) throws {
+    init(_ data: Data) throws {
         let xmlDoc = try AEXMLDocument(xml: data)
         guard let documentElement = xmlDoc.firstDescendant(where: { $0.name == Self.kmlTag }) else {
             throw KMLError.missingRequiredElement(elementName: "Document")
@@ -153,24 +153,24 @@ public extension KMLDocument {
             throw KMLError.kmzReadError
         }
 
-        try self.init(data: extractedData)
+        try self.init(extractedData)
     }
     
-    init(kmlString: String) throws {
+    init(_ kmlString: String) throws {
         guard let data = kmlString.data(using: .utf8) else {
             throw KMLError.missingRequiredElement(elementName: "xml")
         }
-        try self.init(data: data)
+        try self.init(data)
     }
     
     /// Initializes a KMLDocument from a fileUrl, which must have a
     /// path extension of either "KML" or "KMZ" (neither are case-sensitive).
     /// - Throws: KML reading errors.
-    init(url: URL) throws {
+    init(_ url: URL) throws {
         let data = try Data(contentsOf: url)
         switch url.pathExtension.lowercased() {
         case "kml":
-            try self.init(data: data)
+            try self.init(data)
         case "kmz":
             try self.init(kmzData: data)
         default:

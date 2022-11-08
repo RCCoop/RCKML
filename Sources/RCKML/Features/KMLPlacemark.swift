@@ -15,20 +15,20 @@ import Foundation
 /// For reference, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#placemark)
 public struct KMLPlacemark {
     public var name: String
-    public var description: String?
+    public var featureDescription: String?
     public var geometry: KMLGeometry
 
     public var styleUrl: KMLStyleUrl?
     public var style: KMLStyle?
 
     public init(name: String,
-                description: String? = nil,
+                featureDescription: String? = nil,
                 geometry: KMLGeometry,
                 styleUrl: KMLStyleUrl? = nil,
                 style: KMLStyle? = nil)
     {
         self.name = name
-        self.description = description
+        self.featureDescription = featureDescription
         self.geometry = geometry
         self.styleUrl = styleUrl
         self.style = style
@@ -45,7 +45,7 @@ extension KMLPlacemark: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.name = try Self.nameFromXml(xml)
-        self.description = Self.descriptionFromXml(xml)
+        self.featureDescription = Self.descriptionFromXml(xml)
         guard let childGeometryType = KMLGeometryType.allCases.first(where: { xml[$0.rawValue].error == nil })
         else {
             throw KMLError.missingRequiredElement(elementName: "Geometry")
@@ -69,7 +69,7 @@ extension KMLPlacemark: KmlElement {
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(name: "name", value: name)
-        _ = description.map { element.addChild(name: "description", value: $0) }
+        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
         element.addChild(geometry.xmlElement)
         _ = styleUrl.map { element.addChild($0.xmlElement) }
         _ = style.map { element.addChild($0.xmlElement) }

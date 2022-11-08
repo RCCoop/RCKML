@@ -1,8 +1,6 @@
 # RCKML
 
-A library for reading and writing KML files in Swift. Nothing too fancy, but also not too basic.
-
->Made for personal use, but who knows what's next!
+A library for reading and writing KML files in Swift, designed for simplicity and ease of use.
 
 ---
 
@@ -59,7 +57,7 @@ When creating a KMLDocument from scratch (rather than reading from an existing f
 ```swift
 public struct KMLDocument {
     public var name: String?
-    public var description: String?
+    public var featureDescription: String?
     public var features: [KMLFeature]
     public var styles: [KMLStyleUrl: KMLStyleSelector]
 }
@@ -76,10 +74,10 @@ let kmlString = try? String(contentsOf: fileUrl, encoding: .utf8)
 let kmzFileUrl = ...
 let kmzFileData = try Data(contentsOf: kmzFileUrl)
 
-let documentFromData = try? KMLDocument(data: fileData)
-let documentFromFileUrl = try? KMLDocument(url: fileUrl)
-let documentFromString = try? KMLDocument(kmlString: kmlString)
-let documentFromKmzFile = try? KMLDocument(url: kmzFileUrl) //init(url:) works with either KML or KMZ files.
+let documentFromData = try? KMLDocument(fileData)
+let documentFromFileUrl = try? KMLDocument(fileUrl)
+let documentFromString = try? KMLDocument(kmlString)
+let documentFromKmzFile = try? KMLDocument(kmzFileUrl) //init(_ url:) works with either KML or KMZ files.
 let documentFromKmzData = try? KMLDocument(kmzData: kmzFileData)
 ```
 

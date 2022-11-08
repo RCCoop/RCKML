@@ -7,7 +7,7 @@ final class RCKMLTests: XCTestCase {
         guard let doc = getTestDocument() else {
             return
         }
-        
+
         do {
             let stringRep = try doc.kmlString()
             print(stringRep)
@@ -15,12 +15,12 @@ final class RCKMLTests: XCTestCase {
             XCTFail("Failed to write doc.kmlString: \(error.localizedDescription)")
         }
     }
-        
+
     func testKMZ() {
         guard let doc = getTestDocument() else {
             return
         }
-        
+
         do {
             let kmzData = try doc.kmzData()
             let unzipped = try KMLDocument(kmzData: kmzData)
@@ -31,52 +31,52 @@ final class RCKMLTests: XCTestCase {
             XCTFail("KMZ Error: \(error)")
         }
     }
-        
+
     func testMutation() {
         guard var doc = getTestDocument() else {
             return
         }
-            
+
         let folderCount = doc.folders.count
         let featuresCount = doc.features.count
         doc.features.removeAll(where: { $0 is KMLFolder })
         XCTAssertEqual(doc.features.count, featuresCount - folderCount)
     }
 }
-    
+
 // MARK: Finished Tests
 
 extension RCKMLTests {
     func testKmlColors() throws {
         // 80F0BE78
         // == rgba: 120,190,240,50%
-        let kmlStruct = KMLColor(red: 120.0/255.0, green: 190.0/255.0, blue: 240.0/255.0, alpha: 0.5)
+        let kmlStruct = KMLColor(red: 120.0 / 255.0, green: 190.0 / 255.0, blue: 240.0 / 255.0, alpha: 0.5)
         XCTAssertEqual(kmlStruct.red * 255.0, 120.0)
         XCTAssertEqual(kmlStruct.green * 255.0, 190)
         XCTAssertEqual(kmlStruct.blue * 255.0, 240)
         XCTAssertEqual(kmlStruct.alpha, 0.5)
-            
+
         let asString = kmlStruct.colorString
         XCTAssertEqual(asString, "80F0BE78")
-            
+
         let reconstructed = try KMLColor(asString)
         XCTAssertEqual(Int(reconstructed.red * 255.0), 120)
         XCTAssertEqual(Int(reconstructed.green * 255.0), 190)
         XCTAssertEqual(Int(reconstructed.blue * 255.0), 240)
         XCTAssertEqual(reconstructed.alpha, 0.5, accuracy: 0.1)
     }
-        
+
     func testStyles() {
         guard let document = getTestDocument() else {
             return
         }
-            
+
         let styles = document.styles
         guard let transPurpleLineGreenPolyStyle = styles.values.first(where: { $0.id == "transPurpleLineGreenPoly" }) as? KMLStyle else {
             XCTFail("Couldn't find style \"transPurpleLineGreenPoly\" in top level of document")
             return
         }
-            
+
         guard let lineStyle = transPurpleLineGreenPolyStyle.lineStyle else {
             XCTFail("No linestyle found in \"transPurpleLineGreenPoly\" style")
             return
@@ -85,7 +85,7 @@ extension RCKMLTests {
             XCTFail("No polystyle found in \"transPurpleLineGreenPoly\"")
             return
         }
-                        
+
         XCTAssertEqual(lineStyle.width, 4)
         XCTAssertEqual(lineStyle.color?.red, 1)
         XCTAssertEqual(lineStyle.color?.green, 0)
@@ -101,7 +101,7 @@ extension RCKMLTests {
         guard let document = getTestDocument() else {
             return
         }
-            
+
         let knownFolderNames = Set(arrayLiteral: "Placemarks", "Styles and Markup", "Ground Overlays", "Screen Overlays", "Paths", "Polygons")
         let existingFolderNames = document.folders.map(\.name)
         XCTAssertEqual(knownFolderNames.count, existingFolderNames.count)
@@ -112,19 +112,19 @@ extension RCKMLTests {
         guard let document = getTestDocument() else {
             return
         }
-            
+
         guard let placemarksFolder = document.getItemNamed("Placemarks") as? KMLFolder else {
             XCTFail("Couldn't find \"Placemarks\" folder in document")
             return
         }
-            
+
         let placemarks = placemarksFolder.placemarks
         XCTAssertEqual(placemarks.count, 3)
-            
+
         let knownPointNames = Set(["Simple placemark", "Floating placemark", "Extruded placemark"])
         let existingPointNames = Set(placemarks.map(\.name))
         XCTAssertEqual(knownPointNames, existingPointNames)
-            
+
         guard let simplePlacemark = placemarks.first(where: { $0.name == "Simple placemark" }) else {
             XCTFail("Failed to find placemark \"Simple placemark\" in folder")
             return
@@ -133,22 +133,22 @@ extension RCKMLTests {
             XCTFail("Failed to cast \"Simple placemark\"'s geometry to KMLPoint")
             return
         }
-            
+
         XCTAssertEqual(simplePoint.coordinate.latitude, 37.42228990140251)
         XCTAssertEqual(simplePoint.coordinate.longitude, -122.0822035425683)
         XCTAssertEqual(simplePoint.coordinate.altitude, 0)
     }
-        
+
     func testPolygons() {
         guard let document = getTestDocument() else {
             return
         }
-            
+
         guard let polygonsFolder = document.getItemNamed("Polygons") as? KMLFolder else {
             XCTFail("Couldn't find \"Polygons\" folder in document")
             return
         }
-            
+
         let allPolygonFeatures = polygonsFolder.placemarksRecursive
         XCTAssertEqual(allPolygonFeatures.count, 9)
 
@@ -156,14 +156,14 @@ extension RCKMLTests {
             XCTFail("Couldn't find The Pentagon")
             return
         }
-            
+
         guard let thePolygon = thePentagon.geometry as? KMLPolygon else {
             XCTFail("Couldn't cast The Pentagon's geometry to KMLPolygon")
             return
         }
-            
+
         let polygonCoords = thePolygon.outerBoundaryIs.coordinates
-            
+
         let coordString = """
         -77.05788457660967,38.87253259892824,100
         -77.05465973756702,38.87291016281703,100
@@ -180,15 +180,15 @@ extension RCKMLTests {
         guard let document = getTestDocument() else {
             return
         }
-            
+
         guard let placemarksFolder = document.getItemNamed("Paths") as? KMLFolder else {
             XCTFail("Couldn't find \"Placemarks\" folder in document")
             return
         }
-            
+
         let placemarks = placemarksFolder.placemarks
         XCTAssertEqual(placemarks.count, 6)
-            
+
         let knownPathNames = Set(["Tessellated", "Untessellated", "Absolute", "Absolute Extruded", "Relative", "Relative Extruded"])
         let existingPathNames = Set(placemarks.map(\.name))
         XCTAssertEqual(knownPathNames, existingPathNames)
@@ -197,7 +197,7 @@ extension RCKMLTests {
             XCTFail("Couldn't find path \"Absolute\" in paths folder")
             return
         }
-            
+
         guard let styleUrl = absolutePath.styleUrl else {
             XCTFail("Couldn't find StyleURL in path")
             return
@@ -206,12 +206,12 @@ extension RCKMLTests {
             XCTFail("Couldn't find style with url \"\(styleUrl)\"")
             return
         }
-            
+
         guard let lineString = absolutePath.geometry as? KMLLineString else {
             XCTFail("Couldn't cast path's geometry to KMLLineString")
             return
         }
-            
+
         let absolutePathCoordString = """
         -112.265654928602,36.09447672602546,2357
         -112.2660384528238,36.09342608838671,2357
@@ -233,7 +233,7 @@ extension RCKMLTests {
                 return nil
             }
         }
-            
+
         XCTAssertEqual(coords.count, lineString.coordinates.count)
         for idx in 0 ..< lineString.coordinates.count {
             let knownCoordinate = coords[idx]
@@ -256,7 +256,7 @@ extension RCKMLTests {
         }
         do {
             let data = try Data(contentsOf: fileUrl)
-            let document = try KMLDocument(data: data)
+            let document = try KMLDocument(data)
             return document
         } catch {
             XCTFail("KML Reader Error: \(error.localizedDescription)")
