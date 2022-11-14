@@ -1,52 +1,54 @@
 # RCKML
 
+![GitHub](https://img.shields.io/github/license/RCCoop/RCKML)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FRCCoop%2FRCKML%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/RCCoop/RCKML)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FRCCoop%2FRCKML%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/RCCoop/RCKML)
+
 A library for reading and writing KML files in Swift, designed for simplicity and ease of use.
-
----
-
-### Dependencies
-
-- [AEXML](https://github.com/tadija/AEXML) for reading and writing XML files
-- [ZipFoundation](https://github.com/weichsel/ZIPFoundation) for dealing with compression for KMZ data.
-
----
 
 ## Index:
 
+- [Installation](#installation)
 - [Supported KML Types](#supported-kml-types)
 - [KMLDocument](#kmldocument)
 - [Reading KML Files](#reading-kml-files)
 - [Writing KML Files](#writing-kml-files)
 - [Further To-Do's](#further-to-dos)
+- [Dependencies](#dependencies)
 
----
+## Installation
+
+Swift Package Manager:
+```
+.package(url: "https://github.com/RCCoop/RCKML.git", .upToNextMajor(from: "1.0.0"))
+```
 
 ## Supported KML Types
 
-- Feature
-    - Container
-        - Document
-        - Folder
-    - Placemark
-- Geometry
-    - Point
-    - LineString
-    - LinearRing
-    - Polygon
-    - Multigeometry
-- StyleSelector
-    - Style
-    - StyleMap
-- ColorStyle
-    - LineStyle
-    - PolyStyle
+- Feature (`protocol KMLFeature`)
+    - Container (`protocol KMLContainer`)
+        - Document (`struct KMLDocument: KMLContainer`)
+        - Folder (`struct KMLFolder: KMLContainer, KMLFeature`)
+    - Placemark (`struct KMLPlacemark: KMLFeature`)
+- Geometry (`protocol KMLGeometry`)
+    - Point (`struct KMLPoint: KMLGeometry`)
+    - LineString (`struct KMLLineString: KMLGeometry`)
+    - Polygon (`struct KMLPolygon: KMLGeometry`)
+    - Multigeometry (`struct KMLMultiGeometry: KMLGeometry`)
+- StyleSelector (`protocol KMLStyleSelector`)
+	- Style URL (`struct KMLStyleUrl: KMLStyleSelector`)
+    - Style (`struct KMLStyle: KMLStyleSelector`)
+    - StyleMap (`struct KMLStyleMap: KMLStyleSelector`)
+- ColorStyle (`protocol KMLColorStyle`)
+    - LineStyle (`struct KMLLineStyle: KMLColorStyle`)
+    - PolyStyle (`struct KMLPolyStyle: KMLColorStyle`)
 - Sub-formats
-    - KML Color
-    - Coordinates
+    - LinearRing (`struct KMLPolygon.LinearRing`)
+    - KML Color (`struct KMLColor`)
+    - Coordinates (`struct KMLCoordinate` and `struct KMLCoordinateSequence`)
 
->Not all types are supported with all options available to KML files. I've focused on types and features that can be used in MapKit for now.
+>Not all types are supported with all options available to KML files. I've focused on types and features that can be translated into MapKit for now.
 
----
 
 ## KMLDocument
 
@@ -62,8 +64,6 @@ public struct KMLDocument {
     public var styles: [KMLStyleUrl: KMLStyleSelector]
 }
 ```
-
----
 
 ## Reading KML Files
 
@@ -81,8 +81,6 @@ let documentFromKmzFile = try? KMLDocument(kmzFileUrl) //init(_ url:) works with
 let documentFromKmzData = try? KMLDocument(kmzData: kmzFileData)
 ```
 
----
-
 ## Writing KML Files
 
 ```swift
@@ -93,10 +91,12 @@ let asString = kmlDoc.kmlString()
 let asKmzData = kmlDoc.kmzData()
 ```
 
----
-
 ## Further To-Do's
 
 - Documentation: How to add further KML type support
 
----
+## Dependencies
+
+- [AEXML](https://github.com/tadija/AEXML) for reading and writing XML files
+- [ZipFoundation](https://github.com/weichsel/ZIPFoundation) for dealing with compression for KMZ data.
+
