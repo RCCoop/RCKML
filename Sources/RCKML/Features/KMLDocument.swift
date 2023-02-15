@@ -100,9 +100,16 @@ public extension KMLDocument {
         }
 
         let normalData = try kmlData()
-        try archive.addEntry(with: "doc.kml", type: .file, uncompressedSize: UInt32(normalData.count)) { position, size -> Data in
-            normalData.subdata(in: position ..< position + size)
-        }
+        try archive.addEntry(
+            with: "doc.kml",
+            type: .file,
+            uncompressedSize: Int64(normalData.count),
+            compressionMethod: .deflate,
+            provider: { position, size in
+                let startIndex = Data.Index(position)
+                let endIndex = Data.Index(position + Int64(size))
+                return normalData.subdata(in: startIndex..<endIndex)
+            })
         
         guard let result = archive.data else {
             throw KMLError.kmzWriteError

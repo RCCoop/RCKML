@@ -27,6 +27,10 @@ final class RCKMLTests: XCTestCase {
             XCTAssertEqual(doc.features.count, unzipped.features.count)
             XCTAssertEqual(doc.placemarksRecursive.count, unzipped.placemarksRecursive.count)
 
+            let docSize = try doc.kmlData().count
+            let kmzSize = kmzData.count
+            let compression = 1 - (Double(kmzSize) / Double(docSize))
+            print("KML to KMZ: compressed by \((compression * 100).rounded())%")
         } catch {
             XCTFail("KMZ Error: \(error)")
         }
