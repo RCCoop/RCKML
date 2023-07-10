@@ -37,11 +37,12 @@ public struct KMLColor {
     /// A value between 0.0 and 1.0 representing the alpha element of the color
     var alpha: Double
 
-    public init(red: Double,
-                green: Double,
-                blue: Double,
-                alpha: Double = 1.0)
-    {
+    public init(
+        red: Double,
+        green: Double,
+        blue: Double,
+        alpha: Double = 1.0
+    ) {
         self.red = red
         self.green = green
         self.blue = blue

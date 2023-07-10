@@ -15,16 +15,17 @@ import Foundation
 public struct KMLPolygon {
     /// The outer boundary of the polygon.
     public let outerBoundaryIs: LinearRing
-    
+
     /// An optional array of internal boundaries inside the
     /// polygon, which represent holes in the polygon.
     public let innerBoundaryIs: [LinearRing]?
-    
-    public init(outerBoundary: LinearRing,
-                innerBoundaries: [LinearRing]? = nil)
-    {
-        self.outerBoundaryIs = outerBoundary
-        self.innerBoundaryIs = innerBoundaries
+
+    public init(
+        outerBoundary: LinearRing,
+        innerBoundaries: [LinearRing]? = nil
+    ) {
+        outerBoundaryIs = outerBoundary
+        innerBoundaryIs = innerBoundaries
     }
 }
 
@@ -33,36 +34,36 @@ public struct KMLPolygon {
 extension KMLPolygon: KmlElement {
     private static var outerBoundaryKey: String { "outerBoundaryIs" }
     private static var innerBoundaryKey: String { "innerBoundaryIs" }
-    
+
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        
+
         let outerBoundsElement = try xml.requiredXmlChild(name: Self.outerBoundaryKey)
         let outerBoundsLineRing = try outerBoundsElement.requiredKmlChild(ofType: LinearRing.self)
-        self.outerBoundaryIs = outerBoundsLineRing
-                
+        outerBoundaryIs = outerBoundsLineRing
+
         let innerBoundsElements = xml.children.filter { $0.name == Self.innerBoundaryKey }
         if innerBoundsElements.isEmpty == false {
-            self.innerBoundaryIs = innerBoundsElements.compactMap { try? $0.requiredKmlChild(ofType: LinearRing.self) }
+            innerBoundaryIs = innerBoundsElements.compactMap { try? $0.requiredKmlChild(ofType: LinearRing.self) }
         } else {
-            self.innerBoundaryIs = nil
+            innerBoundaryIs = nil
         }
     }
-    
+
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        
+
         // Outer Boundary Ring
         let outerRingElement = AEXMLElement(name: Self.outerBoundaryKey)
         outerRingElement.addChild(outerBoundaryIs.xmlElement)
         element.addChild(outerRingElement)
-        
+
         innerBoundaryIs?.forEach { innerBound in
             let innerElement = AEXMLElement(name: Self.innerBoundaryKey)
             innerElement.addChild(innerBound.xmlElement)
             element.addChild(innerElement)
         }
-        
+
         return element
     }
 }
@@ -82,7 +83,7 @@ public extension KMLPolygon {
     /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#polygon)
     struct LinearRing {
         public let coordinates: [KMLCoordinate]
-        
+
         public init(coordinates: [KMLCoordinate]) {
             self.coordinates = coordinates
         }
@@ -95,13 +96,13 @@ extension KMLPolygon.LinearRing: KmlElement {
     public static var kmlTag: String {
         "LinearRing"
     }
-    
+
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         let kmlCoords = try xml.requiredKmlChild(ofType: KMLCoordinateSequence.self)
-        self.coordinates = kmlCoords.coordinates
+        coordinates = kmlCoords.coordinates
     }
-    
+
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(KMLCoordinateSequence(coordinates: coordinates).xmlElement)

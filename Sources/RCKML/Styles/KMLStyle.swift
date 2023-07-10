@@ -30,10 +30,11 @@ public struct KMLStyle {
         return false
     }
 
-    public init(id: String? = nil,
-         lineStyle: KMLLineStyle? = nil,
-         polyStyle: KMLPolyStyle? = nil)
-    {
+    public init(
+        id: String? = nil,
+        lineStyle: KMLLineStyle? = nil,
+        polyStyle: KMLPolyStyle? = nil
+    ) {
         self.id = id
         self.lineStyle = lineStyle
         self.polyStyle = polyStyle
@@ -49,16 +50,16 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.id = xml.attributes["id"]
+        id = xml.attributes["id"]
 
         let lineStyleElement = xml[KMLLineStyle.kmlTag]
         if lineStyleElement.error == nil {
-            self.lineStyle = try KMLLineStyle(xml: lineStyleElement)
+            lineStyle = try KMLLineStyle(xml: lineStyleElement)
         }
 
         let polyStyleElement = xml[KMLPolyStyle.kmlTag]
         if polyStyleElement.error == nil {
-            self.polyStyle = try KMLPolyStyle(xml: polyStyleElement)
+            polyStyle = try KMLPolyStyle(xml: polyStyleElement)
         }
     }
 

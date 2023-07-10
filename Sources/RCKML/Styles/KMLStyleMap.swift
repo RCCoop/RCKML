@@ -22,10 +22,11 @@ struct KMLStyleMap {
     var style: KMLStyle?
 //    var highlighted: KMLStyleUrl //ignore highlighted
 
-    public init(id: String? = nil,
-         styleUrl: KMLStyleUrl? = nil,
-         style: KMLStyle? = nil)
-    {
+    public init(
+        id: String? = nil,
+        styleUrl: KMLStyleUrl? = nil,
+        style: KMLStyle? = nil
+    ) {
         self.id = id
         self.styleUrl = styleUrl
         self.style = style
@@ -41,7 +42,7 @@ extension KMLStyleMap: KmlElement, KMLStyleSelector {
 
     init(xml: AEXMLElement) throws {
         try? Self.verifyXmlTag(xml)
-        self.id = xml.attributes["id"]
+        id = xml.attributes["id"]
         if let normalPair = xml.children.first(where: { $0["key"].string == "normal" }) {
             if let styleUrl = normalPair.optionalKmlChild(ofType: KMLStyleUrl.self) {
                 self.styleUrl = styleUrl

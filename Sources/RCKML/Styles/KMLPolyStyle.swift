@@ -17,11 +17,12 @@ public struct KMLPolyStyle {
     public var isOutlined: Bool
     public var color: KMLColor?
 
-    public init(id: String?,
-         isFilled: Bool = false,
-         isOutlined: Bool = true,
-         color: KMLColor? = nil)
-    {
+    public init(
+        id: String?,
+        isFilled: Bool = false,
+        isOutlined: Bool = true,
+        color: KMLColor? = nil
+    ) {
         self.id = id
         self.isFilled = isFilled
         self.isOutlined = isOutlined
@@ -38,10 +39,10 @@ extension KMLPolyStyle: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.id = xml.attributes["id"]
-        self.color = xml.optionalKmlChild(ofType: KMLColor.self)
-        self.isFilled = xml["fill"].bool ?? true
-        self.isOutlined = xml["outline"].bool ?? true
+        id = xml.attributes["id"]
+        color = xml.optionalKmlChild(ofType: KMLColor.self)
+        isFilled = xml["fill"].bool ?? true
+        isOutlined = xml["outline"].bool ?? true
     }
 
     public var xmlElement: AEXMLElement {

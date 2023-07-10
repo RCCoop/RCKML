@@ -24,10 +24,11 @@ public struct KMLCoordinate {
     public let longitude: Double
     public let altitude: Double?
 
-    public init(latitude: Double,
-                longitude: Double,
-                altitude: Double? = nil)
-    {
+    public init(
+        latitude: Double,
+        longitude: Double,
+        altitude: Double? = nil
+    ) {
         self.latitude = latitude
         self.longitude = longitude
         self.altitude = altitude
@@ -67,7 +68,7 @@ extension KMLCoordinateSequence: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.coordinates = try Self.parseCoordinates(xml.string)
+        coordinates = try Self.parseCoordinates(xml.string)
     }
 
     public var xmlElement: AEXMLElement {

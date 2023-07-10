@@ -17,10 +17,11 @@ public struct KMLFolder {
     public var featureDescription: String?
     public var features: [KMLFeature]
 
-    public init(name: String,
-                featureDescription: String? = nil,
-                features: [KMLFeature] = [])
-    {
+    public init(
+        name: String,
+        featureDescription: String? = nil,
+        features: [KMLFeature] = []
+    ) {
         self.name = name
         self.featureDescription = featureDescription
         self.features = features
@@ -36,9 +37,9 @@ extension KMLFolder: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.name = try Self.nameFromXml(xml)
-        self.featureDescription = Self.descriptionFromXml(xml)
-        self.features = try Self.features(from: xml)
+        name = try Self.nameFromXml(xml)
+        featureDescription = Self.descriptionFromXml(xml)
+        features = try Self.features(from: xml)
     }
 
     public var xmlElement: AEXMLElement {

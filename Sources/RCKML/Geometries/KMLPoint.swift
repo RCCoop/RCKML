@@ -18,11 +18,12 @@ public struct KMLPoint {
         self.coordinate = coordinate
     }
 
-    public init(latitude: Double,
-                longitude: Double,
-                altitude: Double? = nil)
-    {
-        self.coordinate = KMLCoordinate(latitude: latitude, longitude: longitude, altitude: altitude)
+    public init(
+        latitude: Double,
+        longitude: Double,
+        altitude: Double? = nil
+    ) {
+        coordinate = KMLCoordinate(latitude: latitude, longitude: longitude, altitude: altitude)
     }
 }
 
@@ -37,7 +38,7 @@ extension KMLPoint: KmlElement {
             throw KMLError.missingRequiredElement(elementName: "coordinates")
         }
 
-        self.coordinate = firstCoord
+        coordinate = firstCoord
     }
 
     public var xmlElement: AEXMLElement {

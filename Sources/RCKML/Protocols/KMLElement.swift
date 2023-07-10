@@ -16,8 +16,6 @@ import Foundation
 ///
 /// The basic functions of this protocol are to provide encoding and decoding support
 /// to a class or type of KML Element (for example, **Feature**, **Geometry**, or **Style**).
-///
-///
 public protocol KmlElement {
     /// The XML element name for this type of KML Element, such as
     /// **Feature**, **Document**, **Geometry**, **Style**, etc.

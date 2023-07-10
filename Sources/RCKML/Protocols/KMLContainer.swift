@@ -22,15 +22,15 @@ public extension KMLContainer {
     /// An unordered array of all KMLFolders in this container,
     /// not counting those inside nested containers.
     var folders: [KMLFolder] {
-        return self.features.compactMap { $0 as? KMLFolder }
+        return features.compactMap { $0 as? KMLFolder }
     }
-    
+
     /// An unordered array of all KMLPlacemarks in this container,
     /// not counting those inside nested containers.
     var placemarks: [KMLPlacemark] {
-        return self.features.compactMap { $0 as? KMLPlacemark }
+        return features.compactMap { $0 as? KMLPlacemark }
     }
-    
+
     /// An array of all KMLPlacemarks in this container, as well as
     /// inside nested containers to any depth.
     var placemarksRecursive: [KMLPlacemark] {
@@ -42,16 +42,15 @@ public extension KMLContainer {
             }
         }
     }
-    
+
     /// Finds the first item in this container with a given name.
     /// Nested containers are not searched.
     ///
     /// - Parameter itemName: The name of the item to be found
     /// - Returns: A KMLFeature with the given name, or nil if none exists.
     func getItemNamed(_ itemName: String) -> KMLFeature? {
-        self.features.first(where: { $0.name == itemName })
+        features.first(where: { $0.name == itemName })
     }
-    
 }
 
 // MARK: - Initializer Helpers
@@ -79,7 +78,6 @@ internal extension KMLContainer {
 // MARK: - Internal Functions
 
 internal extension KMLContainer {
-    
     /// For debug use, prints a string representation of all items inside this container
     /// - Parameter indentation: The indentation level of elements described.
     /// Only to be used inside this function call for recursive indentation.
@@ -92,12 +90,11 @@ internal extension KMLContainer {
             } else if let folder = feature as? KMLFolder {
                 basic += " (\(folder.features.count) items)"
             }
-            
+
             print(basic)
             if let folder = feature as? KMLContainer {
                 folder.listContents(indentation: indentation + 1)
             }
         }
     }
-    
 }

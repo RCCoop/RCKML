@@ -16,10 +16,11 @@ public struct KMLLineStyle {
     public var width: Double
     public var color: KMLColor?
 
-    public init(id: String? = nil,
-         width: Double = 1.0,
-         color: KMLColor? = nil)
-    {
+    public init(
+        id: String? = nil,
+        width: Double = 1.0,
+        color: KMLColor? = nil
+    ) {
         self.id = id
         self.width = width
         self.color = color
@@ -35,9 +36,9 @@ extension KMLLineStyle: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.id = xml.attributes["id"]
-        self.width = xml.optionalXmlChild(name: "width")?.double! ?? 1.0
-        self.color = xml.optionalKmlChild(ofType: KMLColor.self)
+        id = xml.attributes["id"]
+        width = xml.optionalXmlChild(name: "width")?.double! ?? 1.0
+        color = xml.optionalKmlChild(ofType: KMLColor.self)
     }
 
     public var xmlElement: AEXMLElement {
