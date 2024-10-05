@@ -32,8 +32,8 @@ public struct KMLPoint {
 extension KMLPoint: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        let coordElement = try xml.requiredKmlChild(ofType: KMLCoordinateSequence.self)
-        guard let firstCoord = coordElement.coordinates.first
+        let coordElement = try xml.requiredKmlChild(ofType: [KMLCoordinate].self)
+        guard let firstCoord = coordElement.first
         else {
             throw KMLError.missingRequiredElement(elementName: "coordinates")
         }
@@ -43,7 +43,7 @@ extension KMLPoint: KmlElement {
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        element.addChild(KMLCoordinateSequence(coordinates: [coordinate]).xmlElement)
+        element.addChild([coordinate].xmlElement)
         return element
     }
 }

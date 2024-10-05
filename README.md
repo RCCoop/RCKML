@@ -45,7 +45,7 @@ Swift Package Manager:
 - Sub-formats
     - LinearRing (`struct KMLPolygon.LinearRing`)
     - KML Color (`struct KMLColor`)
-    - Coordinates (`struct KMLCoordinate` and `struct KMLCoordinateSequence`)
+    - Coordinates (`struct KMLCoordinate` and `Array<KMLCoordinate>`)
 
 >Not all types are supported with all options available to KML files. I've focused on types and features that can be translated into MapKit for now.
 

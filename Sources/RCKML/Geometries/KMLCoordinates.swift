@@ -47,8 +47,42 @@ extension KMLCoordinate: CustomStringConvertible {
     }
 }
 
-// MARK: - KMLCoordinateSequence
+// MARK: - Coordinate Array
 
+extension Array: KmlElement where Element == KMLCoordinate {
+    public static var kmlTag: String {
+        "coordinates"
+    }
+    
+    public init(xml: AEXMLElement) throws {
+        try Self.verifyXmlTag(xml)
+        self = try Self.parseCoordinates(xml.string)
+    }
+    
+    public var xmlElement: AEXMLElement {
+        AEXMLElement(name: Self.kmlTag, value: map(\.description).joined(separator: "\n"))
+    }
+    
+    private static func parseCoordinates(_ coordString: String) throws -> [KMLCoordinate] {
+        let splits = coordString.components(separatedBy: .whitespacesAndNewlines)
+        let coords = splits.compactMap { str -> KMLCoordinate? in
+            if str.isEmpty { return nil }
+            let components = str.components(separatedBy: ",")
+            if components.count < 2 { return nil }
+
+            let long = Double(components[0])!
+            let lat = Double(components[1])!
+            let alt = components.count > 2 ? Double(components[2]) : nil
+            return KMLCoordinate(latitude: lat, longitude: long, altitude: alt)
+        }
+
+        if coords.isEmpty {
+            throw KMLError.coordinateParseFailed
+        }
+        return coords
+    }
+}
+/*
 /// A wrapper around an array of KMLCoordinate used for storage
 /// in KML files. This is generally only used in reading/writing
 /// KML files, whereas the KMLGeometry structs in this library
@@ -94,3 +128,4 @@ extension KMLCoordinateSequence: KmlElement {
         return coords
     }
 }
+*/

@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/tadija/AEXML.git",
         "state": {
           "branch": null,
-          "revision": "38f7d00b23ecd891e1ee656fa6aeebd6ba04ecc3",
-          "version": "4.6.1"
+          "revision": "db806756c989760b35108146381535aec231092b",
+          "version": "4.7.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/weichsel/ZIPFoundation.git",
         "state": {
           "branch": null,
-          "revision": "43ec568034b3731101dbf7670765d671c30f54f3",
-          "version": "0.9.16"
+          "revision": "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+          "version": "0.9.19"
         }
       }
     ]

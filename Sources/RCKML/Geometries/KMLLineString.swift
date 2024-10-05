@@ -25,14 +25,12 @@ public struct KMLLineString {
 extension KMLLineString: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        let kmlCoords = try xml.requiredKmlChild(ofType: KMLCoordinateSequence.self)
-        self.coordinates = kmlCoords.coordinates
+        coordinates = try xml.requiredKmlChild(ofType: [KMLCoordinate].self)
     }
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        let coordRep = KMLCoordinateSequence(coordinates: coordinates)
-        element.addChild(coordRep.xmlElement)
+        element.addChild(coordinates.xmlElement)
         return element
     }
 }

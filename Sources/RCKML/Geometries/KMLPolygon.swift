@@ -99,13 +99,12 @@ extension KMLPolygon.LinearRing: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        let kmlCoords = try xml.requiredKmlChild(ofType: KMLCoordinateSequence.self)
-        coordinates = kmlCoords.coordinates
+        coordinates = try xml.requiredKmlChild(ofType: [KMLCoordinate].self)
     }
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        element.addChild(KMLCoordinateSequence(coordinates: coordinates).xmlElement)
+        element.addChild(coordinates.xmlElement)
         return element
     }
 }
