@@ -95,9 +95,7 @@ public extension KMLDocument {
     
     /// Returns the file data representation as a KMZ file.
     func kmzData() throws -> Data {
-        guard let archive = Archive(data: Data(), accessMode: .create, preferredEncoding: .utf8) else {
-            throw KMLError.kmzWriteError
-        }
+        let archive = try Archive(data: Data(), accessMode: .create, pathEncoding: .utf8)
 
         let normalData = try kmlData()
         try archive.addEntry(
@@ -151,9 +149,9 @@ public extension KMLDocument {
     
     init(kmzData: Data) throws {
         var extractedData = Data()
+        let archive = try Archive(data: kmzData, accessMode: .read, pathEncoding: .utf8)
         
-        guard let archive = Archive(data: kmzData, accessMode: .read, preferredEncoding: .utf8),
-              let kmlEntry = archive.first(where: { $0.path.hasSuffix("kml") }),
+        guard let kmlEntry = archive.first(where: { $0.path.hasSuffix("kml") }),
               let _ = try? archive.extract(kmlEntry, consumer: { extractedData += $0 }),
               !extractedData.isEmpty
         else {
