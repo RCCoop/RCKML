@@ -13,12 +13,12 @@ import Foundation
 ///
 /// For reference, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#folder)
 public struct KMLFolder {
-    public var name: String
+    public var name: String?
     public var featureDescription: String?
     public var features: [KMLFeature]
 
     public init(
-        name: String,
+        name: String? = nil,
         featureDescription: String? = nil,
         features: [KMLFeature] = []
     ) {
@@ -37,7 +37,7 @@ extension KMLFolder: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        name = try Self.nameFromXml(xml)
+        name = Self.nameFromXml(xml)
         featureDescription = Self.descriptionFromXml(xml)
         features = try Self.features(from: xml)
     }

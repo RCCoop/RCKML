@@ -14,7 +14,7 @@ import Foundation
 ///
 /// For reference, see [KML Spec](https://developers.google.com/kml/documentation/kmlreference#placemark)
 public struct KMLPlacemark {
-    public var name: String
+    public var name: String?
     public var featureDescription: String?
     public var geometry: KMLGeometry
 
@@ -44,7 +44,7 @@ extension KMLPlacemark: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.name = try Self.nameFromXml(xml)
+        self.name = Self.nameFromXml(xml)
         self.featureDescription = Self.descriptionFromXml(xml)
         guard let childGeometryType = KMLGeometryType.allCases.first(where: { xml[$0.rawValue].error == nil })
         else {
