@@ -106,7 +106,14 @@ extension RCKMLTests {
             return
         }
 
-        let knownFolderNames = Set(arrayLiteral: "Placemarks", "Styles and Markup", "Ground Overlays", "Screen Overlays", "Paths", "Polygons")
+        let knownFolderNames: Set<String?> = [
+            "Placemarks",
+            "Styles and Markup",
+            "Ground Overlays",
+            "Screen Overlays",
+            "Paths",
+            "Polygons"
+        ]
         let existingFolderNames = document.folders.map(\.name)
         XCTAssertEqual(knownFolderNames.count, existingFolderNames.count)
         XCTAssert(knownFolderNames.subtracting(existingFolderNames).isEmpty)
