@@ -23,7 +23,7 @@ public struct KMLDocument {
     public var featureDescription: String?
     public var features: [KMLFeature]
     public var styles: [KMLStyleUrl: KMLStyleSelector]
-    
+
     public init(name: String? = nil,
                 featureDescription: String? = nil,
                 features: [KMLFeature] = [],
@@ -42,7 +42,7 @@ extension KMLDocument: KmlElement {
     public static var kmlTag: String {
         "Document"
     }
-    
+
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.features = try Self.features(from: xml)
@@ -50,20 +50,20 @@ extension KMLDocument: KmlElement {
         self.styles = try Self.kmlStylesInElement(xml)
         self.featureDescription = xml.optionalXmlChild(name: "description")?.string
     }
-        
+
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         _ = name.map { element.addChild(name: "name", value: $0) }
         _ = featureDescription.map { element.addChild(name: "description", value: $0) }
-        
+
         for (_, style) in styles {
             element.addChild(style.xmlElement)
         }
-        
+
         for item in features {
             element.addChild(item.xmlElement)
         }
-        
+
         return element
     }
 }
@@ -84,7 +84,7 @@ public extension KMLDocument {
         _ = try kmlRoot.error.map { throw $0 }
         return xmlDoc.xml
     }
-    
+
     /// Returns the file data representation of the KML file.
     func kmlData() throws -> Data {
         guard let result = try kmlString().data(using: .utf8) else {
@@ -92,7 +92,7 @@ public extension KMLDocument {
         }
         return result
     }
-    
+
     /// Returns the file data representation as a KMZ file.
     func kmzData() throws -> Data {
         let archive = try Archive(data: Data(), accessMode: .create, pathEncoding: .utf8)
@@ -108,13 +108,13 @@ public extension KMLDocument {
                 let endIndex = Data.Index(position + Int64(size))
                 return normalData.subdata(in: startIndex..<endIndex)
             })
-        
+
         guard let result = archive.data else {
             throw KMLError.kmzWriteError
         }
         return result
     }
-    
+
     /// Given a KMLStyleUrl reference from a feature contained in this document,
     /// returns the global style that is referenced by the url.
     func getStyleFromUrl(_ styleUrl: KMLStyleUrl) -> KMLStyle? {
@@ -146,11 +146,11 @@ public extension KMLDocument {
         }
         try self.init(xml: documentElement)
     }
-    
+
     init(kmzData: Data) throws {
         var extractedData = Data()
         let archive = try Archive(data: kmzData, accessMode: .read, pathEncoding: .utf8)
-        
+
         guard let kmlEntry = archive.first(where: { $0.path.hasSuffix("kml") }),
               let _ = try? archive.extract(kmlEntry, consumer: { extractedData += $0 }),
               !extractedData.isEmpty
@@ -160,14 +160,14 @@ public extension KMLDocument {
 
         try self.init(extractedData)
     }
-    
+
     init(_ kmlString: String) throws {
         guard let data = kmlString.data(using: .utf8) else {
             throw KMLError.missingRequiredElement(elementName: "xml")
         }
         try self.init(data)
     }
-    
+
     /// Initializes a KMLDocument from a fileUrl, which must have a
     /// path extension of either "KML" or "KMZ" (neither are case-sensitive).
     /// - Throws: KML reading errors.
@@ -182,7 +182,7 @@ public extension KMLDocument {
             throw KMLError.unknownFileExtension(extension: url.pathExtension)
         }
     }
-    
+
     /// Given the root XML element of a KML file, this returns the `styles`
     /// property for the KMLDocument.
     private static func kmlStylesInElement(_ xmlElement: AEXMLElement) throws -> [KMLStyleUrl: KMLStyleSelector] {

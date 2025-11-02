@@ -53,16 +53,16 @@ extension Array: KmlElement where Element == KMLCoordinate {
     public static var kmlTag: String {
         "coordinates"
     }
-    
+
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self = try Self.parseCoordinates(xml.string)
     }
-    
+
     public var xmlElement: AEXMLElement {
         AEXMLElement(name: Self.kmlTag, value: map(\.description).joined(separator: "\n"))
     }
-    
+
     private static func parseCoordinates(_ coordString: String) throws -> [KMLCoordinate] {
         let splits = coordString.components(separatedBy: .whitespacesAndNewlines)
         let coords = splits.compactMap { str -> KMLCoordinate? in
