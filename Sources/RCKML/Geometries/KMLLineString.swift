@@ -39,6 +39,6 @@ extension KMLLineString: KmlElement {
 
 extension KMLLineString: KMLGeometry {
     public static var geometryType: KMLGeometryType {
-        .LineString
+        .lineString
     }
 }

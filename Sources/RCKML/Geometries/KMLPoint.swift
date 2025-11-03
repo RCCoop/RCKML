@@ -52,6 +52,6 @@ extension KMLPoint: KmlElement {
 
 extension KMLPoint: KMLGeometry {
     public static var geometryType: KMLGeometryType {
-        .Point
+        .point
     }
 }

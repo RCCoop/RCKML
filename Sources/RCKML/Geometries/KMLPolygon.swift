@@ -75,7 +75,7 @@ extension KMLPolygon: KmlElement {
 // MARK: KMLGeometry
 
 extension KMLPolygon: KMLGeometry {
-    public static var geometryType: KMLGeometryType { .Polygon }
+    public static var geometryType: KMLGeometryType { .polygon }
 }
 
 // MARK: - Linear Ring

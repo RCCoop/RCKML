@@ -15,21 +15,21 @@ import Foundation
 /// - Important: Whenever a Geometry type is added to this library, you must also add
 /// a corresponding case to this enum.
 public enum KMLGeometryType: String, CaseIterable {
-    case LineString
-    case Polygon
-    case Point
-    case MultiGeometry
+    case lineString = "LineString"
+    case polygon = "Polygon"
+    case point = "Point"
+    case multiGeometry = "MultiGeometry"
 
     /// The RCKML type that corresponds to this KML Geometry class.
     var concreteType: KMLGeometry.Type {
         switch self {
-        case .LineString:
+        case .lineString:
             KMLLineString.self
-        case .Polygon:
+        case .polygon:
             KMLPolygon.self
-        case .Point:
+        case .point:
             KMLPoint.self
-        case .MultiGeometry:
+        case .multiGeometry:
             KMLMultiGeometry.self
         }
     }
@@ -42,15 +42,15 @@ public enum KMLGeometryType: String, CaseIterable {
 /// - Important: Whenever a Feature type is added to this library, you must also add
 /// a corresponding case to this enum
 public enum KMLFeatureType: String, CaseIterable {
-    case Folder
-    case Placemark
+    case folder = "Folder"
+    case placemark = "Placemark"
 
     /// The RCKML type that corresponds to this KML feature class.
     var concreteType: KMLFeature.Type {
         switch self {
-        case .Folder:
+        case .folder:
             KMLFolder.self
-        case .Placemark:
+        case .placemark:
             KMLPlacemark.self
         }
     }
@@ -61,7 +61,7 @@ public enum KMLFeatureType: String, CaseIterable {
             return false
         }
 
-        if type == .Placemark,
+        if type == .placemark,
            xml.children.allSatisfy({ KMLGeometryType(rawValue: $0.name) == nil })
         {
             return false

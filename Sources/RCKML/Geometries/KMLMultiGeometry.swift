@@ -45,5 +45,5 @@ extension KMLMultiGeometry: KmlElement {
 // MARK: KMLGeometry
 
 extension KMLMultiGeometry: KMLGeometry {
-    public static var geometryType: KMLGeometryType { .MultiGeometry }
+    public static var geometryType: KMLGeometryType { .multiGeometry }
 }
