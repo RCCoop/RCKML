@@ -46,7 +46,7 @@ extension KMLPolyStyle: KmlElement {
     }
 
     public var xmlElement: AEXMLElement {
-        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        let element = AEXMLElement(baseFor: KMLPolyStyle.self, id: id)
         element.addChild(name: "fill", value: isFilled ? "1" : "0")
         element.addChild(name: "outline", value: isOutlined ? "1" : "0")
         if let color {

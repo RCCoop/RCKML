@@ -37,17 +37,15 @@ extension KMLFolder: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        name = Self.nameFromXml(xml)
-        featureDescription = Self.descriptionFromXml(xml)
+        name = xml.kmlName
+        featureDescription = xml.kmlFeatureDescription
         features = try Self.features(from: xml)
     }
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        element.addChild(name: "name", value: name)
-        if let featureDescription {
-            element.addChild(name: "description", value: featureDescription)
-        }
+        element.kmlName = name
+        element.kmlFeatureDescription = featureDescription
         for item in features {
             element.addChild(item.xmlElement)
         }

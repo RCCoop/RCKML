@@ -45,8 +45,8 @@ extension KMLPlacemark: KmlElement {
 
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
-        self.name = Self.nameFromXml(xml)
-        self.featureDescription = Self.descriptionFromXml(xml)
+        self.name = xml.kmlName
+        self.featureDescription = xml.kmlFeatureDescription
 
         guard let childGeometryType = KMLGeometryType
             .allCases
@@ -76,13 +76,15 @@ extension KMLPlacemark: KmlElement {
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        element.addChild(name: "name", value: name)
-        if let featureDescription {
-            element.addChild(name: "description", value: featureDescription)
-        }
+        element.kmlName = name
+        element.kmlFeatureDescription = featureDescription
         element.addChild(geometry.xmlElement)
-        _ = styleUrl.map { element.addChild($0.xmlElement) }
-        _ = style.map { element.addChild($0.xmlElement) }
+        if let styleUrl {
+            element.addChild(styleUrl.xmlElement)
+        }
+        if let style {
+            element.addChild(style.xmlElement)
+        }
         return element
     }
 }

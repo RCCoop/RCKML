@@ -47,19 +47,15 @@ extension KMLDocument: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         self.features = try Self.features(from: xml)
-        self.name = xml.optionalXmlChild(name: "name")?.string
+        self.name = xml.kmlName
         self.styles = try Self.kmlStylesInElement(xml)
-        self.featureDescription = xml.optionalXmlChild(name: "description")?.string
+        self.featureDescription = xml.kmlFeatureDescription
     }
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        if let name {
-            element.addChild(name: "name", value: name)
-        }
-        if let featureDescription {
-            element.addChild(name: "description", value: featureDescription)
-        }
+        element.kmlName = name
+        element.kmlFeatureDescription = featureDescription
 
         for (_, style) in styles {
             element.addChild(style.xmlElement)

@@ -41,6 +41,7 @@ extension KMLStyleMap: KmlElement, KMLStyleSelector {
     }
 
     init(xml: AEXMLElement) throws {
+        // TODO: why is this try optional?
         try? Self.verifyXmlTag(xml)
         id = xml.attributes["id"]
         if let normalPair = xml.children.first(where: { $0["key"].string == "normal" }) {
@@ -53,7 +54,7 @@ extension KMLStyleMap: KmlElement, KMLStyleSelector {
     }
 
     var xmlElement: AEXMLElement {
-        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        let element = AEXMLElement(baseFor: KMLStyleMap.self, id: id)
         if let style {
             element.addChild(style.xmlElement)
         }

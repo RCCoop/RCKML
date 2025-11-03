@@ -59,7 +59,7 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
     }
 
     public var xmlElement: AEXMLElement {
-        let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
+        let element = AEXMLElement(baseFor: KMLStyle.self, id: id)
         if let lineStyle {
             element.addChild(lineStyle.xmlElement)
         }
