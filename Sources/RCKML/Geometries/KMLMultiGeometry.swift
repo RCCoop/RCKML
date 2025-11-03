@@ -25,8 +25,7 @@ extension KMLMultiGeometry: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         geometries = try xml.children.compactMap { xmlChild -> KMLGeometry? in
-            guard let type = KMLGeometryType(rawValue: xmlChild.name)
-            else {
+            guard let type = KMLGeometryType(rawValue: xmlChild.name) else {
                 return nil
             }
             let object = try type.concreteType.init(xml: xmlChild)

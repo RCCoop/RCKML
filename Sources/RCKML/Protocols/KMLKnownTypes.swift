@@ -24,13 +24,13 @@ public enum KMLGeometryType: String, CaseIterable {
     var concreteType: KMLGeometry.Type {
         switch self {
         case .LineString:
-            return KMLLineString.self
+            KMLLineString.self
         case .Polygon:
-            return KMLPolygon.self
+            KMLPolygon.self
         case .Point:
-            return KMLPoint.self
+            KMLPoint.self
         case .MultiGeometry:
-            return KMLMultiGeometry.self
+            KMLMultiGeometry.self
         }
     }
 }
@@ -49,9 +49,9 @@ public enum KMLFeatureType: String, CaseIterable {
     var concreteType: KMLFeature.Type {
         switch self {
         case .Folder:
-            return KMLFolder.self
+            KMLFolder.self
         case .Placemark:
-            return KMLPlacemark.self
+            KMLPlacemark.self
         }
     }
 
@@ -62,7 +62,7 @@ public enum KMLFeatureType: String, CaseIterable {
         }
 
         if type == .Placemark,
-           xml.children.first(where: { KMLGeometryType(rawValue: $0.name) != nil }) == nil
+           xml.children.allSatisfy({ KMLGeometryType(rawValue: $0.name) == nil })
         {
             return false
         }

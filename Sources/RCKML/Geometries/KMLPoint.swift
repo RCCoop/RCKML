@@ -33,8 +33,8 @@ extension KMLPoint: KmlElement {
     public init(xml: AEXMLElement) throws {
         try Self.verifyXmlTag(xml)
         let coordElement = try xml.requiredKmlChild(ofType: [KMLCoordinate].self)
-        guard let firstCoord = coordElement.first
-        else {
+        
+        guard let firstCoord = coordElement.first else {
             throw KMLError.missingRequiredElement(elementName: "coordinates")
         }
 

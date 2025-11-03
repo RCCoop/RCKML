@@ -54,8 +54,12 @@ extension KMLStyleMap: KmlElement, KMLStyleSelector {
 
     var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
-        _ = style.map { element.addChild($0.xmlElement) }
-        _ = styleUrl.map { element.addChild($0.xmlElement) }
+        if let style {
+            element.addChild(style.xmlElement)
+        }
+        if let styleUrl {
+            element.addChild(styleUrl.xmlElement)
+        }
         return element
     }
 }

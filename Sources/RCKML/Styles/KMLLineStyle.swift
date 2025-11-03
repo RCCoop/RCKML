@@ -44,7 +44,9 @@ extension KMLLineStyle: KmlElement {
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
         element.addChild(name: "width", value: String(format: "%.1f", width))
-        _ = color.map { element.addChild($0.xmlElement) }
+        if let color {
+            element.addChild(color.xmlElement)
+        }
         return element
     }
 }

@@ -48,9 +48,9 @@ internal extension KmlElement {
     /// using the element's optional id as the first entry in the dictionary.
     ///
     /// - Parameter id: The optional id of this KML element.
-    /// - Returns: A dictionary of `["id":self.id]` if `self.id` exists, or an empty dictionary if it doesn't.
-    static func xmlAttributesWithId(_ id: String?) -> [String: String] {
-        id != nil ? ["id": id!] : [:]
+    /// - Returns: A dictionary of `["id" : self.id]` if `self.id` exists, or an empty dictionary if it doesn't.
+    static func xmlAttributesWithId(_ id: String?) -> [String : String] {
+        ["id" : id].compactMapValues(\.self)
     }
 }
 

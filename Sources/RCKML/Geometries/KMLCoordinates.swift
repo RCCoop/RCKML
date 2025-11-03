@@ -20,9 +20,9 @@ import Foundation
 /// - SeeAlso:
 /// KMLCoordinateSequence
 public struct KMLCoordinate {
-    public let latitude: Double
-    public let longitude: Double
-    public let altitude: Double?
+    public var latitude: Double
+    public var longitude: Double
+    public var altitude: Double?
 
     public init(
         latitude: Double,
@@ -40,9 +40,9 @@ public struct KMLCoordinate {
 extension KMLCoordinate: CustomStringConvertible {
     public var description: String {
         if let altitude = altitude {
-            return String(format: "%6f,%.6f,%.1f", longitude, latitude, altitude)
+            String(format: "%6f,%.6f,%.1f", longitude, latitude, altitude)
         } else {
-            return String(format: "%.6f,%.6f", longitude, latitude)
+            String(format: "%.6f,%.6f", longitude, latitude)
         }
     }
 }
@@ -65,10 +65,16 @@ extension Array: KmlElement where Element == KMLCoordinate {
 
     private static func parseCoordinates(_ coordString: String) throws -> [KMLCoordinate] {
         let splits = coordString.components(separatedBy: .whitespacesAndNewlines)
+        
         let coords = splits.compactMap { str -> KMLCoordinate? in
-            if str.isEmpty { return nil }
+            if str.isEmpty {
+                return nil
+            }
+
             let components = str.components(separatedBy: ",")
-            if components.count < 2 { return nil }
+            if components.count < 2 {
+                return nil
+            }
 
             let long = Double(components[0])!
             let lat = Double(components[1])!

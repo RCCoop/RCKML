@@ -75,7 +75,13 @@ extension KMLColor: KmlElement {
 public extension KMLColor {
     /// String representation of the KML Color, as found in the KML tag "\<color\>xxxxxxxx\</color\>"
     var colorString: String {
-        return String(format: "%02lX%02lX%02lX%02lX", lroundf(Float(alpha) * 255), lroundf(Float(blue) * 255), lroundf(Float(green) * 255), lroundf(Float(red) * 255))
+        String(
+            format: "%02lX%02lX%02lX%02lX",
+            lroundf(Float(alpha) * 255),
+            lroundf(Float(blue) * 255),
+            lroundf(Float(green) * 255),
+            lroundf(Float(red) * 255)
+        )
     }
 
     var cgColor: CGColor {
@@ -84,7 +90,12 @@ public extension KMLColor {
 
     #if canImport(UIKit)
     var uiColor: UIColor {
-        UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+        UIColor(
+            red: CGFloat(red),
+            green: CGFloat(green),
+            blue: CGFloat(blue),
+            alpha: CGFloat(alpha)
+        )
     }
 
     init(_ uiColor: UIColor) {
@@ -102,7 +113,12 @@ public extension KMLColor {
 
     #if canImport(AppKit)
     var nsColor: NSColor {
-        NSColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+        NSColor(
+            red: CGFloat(red),
+            green: CGFloat(green),
+            blue: CGFloat(blue),
+            alpha: CGFloat(alpha)
+        )
     }
 
     init(_ nsColor: NSColor) {
@@ -132,7 +148,9 @@ internal extension KMLColor {
     /// Initializer of KMLColor from a tag found in the KML file.
     /// - Throws: KMLColor.ColorError if the string is of the incorrect format.
     init(_ kmlString: String) throws {
-        let formattedString = kmlString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        let formattedString = kmlString
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .uppercased()
         let scanner = Scanner(string: formattedString)
         var hexNumber: UInt64 = 0
         let stringLength = formattedString.count

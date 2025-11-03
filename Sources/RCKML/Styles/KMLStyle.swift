@@ -22,12 +22,7 @@ public struct KMLStyle {
     public var polyStyle: KMLPolyStyle?
 
     public var isEmpty: Bool {
-        if lineStyle == nil, polyStyle == nil {
-            return true
-        } else if lineStyle?.color == nil, polyStyle?.color == nil {
-            return true
-        }
-        return false
+        lineStyle?.color == nil && polyStyle?.color == nil
     }
 
     public init(
@@ -65,8 +60,12 @@ extension KMLStyle: KmlElement, KMLStyleSelector {
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
-        _ = lineStyle.map { element.addChild($0.xmlElement) }
-        _ = polyStyle.map { element.addChild($0.xmlElement) }
+        if let lineStyle {
+            element.addChild(lineStyle.xmlElement)
+        }
+        if let polyStyle {
+            element.addChild(polyStyle.xmlElement)
+        }
         return element
     }
 }

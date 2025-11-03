@@ -14,11 +14,11 @@ import Foundation
 /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#polygon)
 public struct KMLPolygon {
     /// The outer boundary of the polygon.
-    public let outerBoundaryIs: LinearRing
+    public var outerBoundaryIs: LinearRing
 
     /// An optional array of internal boundaries inside the
     /// polygon, which represent holes in the polygon.
-    public let innerBoundaryIs: [LinearRing]?
+    public var innerBoundaryIs: [LinearRing]?
 
     public init(
         outerBoundary: LinearRing,
@@ -42,9 +42,13 @@ extension KMLPolygon: KmlElement {
         let outerBoundsLineRing = try outerBoundsElement.requiredKmlChild(ofType: LinearRing.self)
         outerBoundaryIs = outerBoundsLineRing
 
-        let innerBoundsElements = xml.children.filter { $0.name == Self.innerBoundaryKey }
-        if innerBoundsElements.isEmpty == false {
-            innerBoundaryIs = innerBoundsElements.compactMap { try? $0.requiredKmlChild(ofType: LinearRing.self) }
+        let innerBoundsElements = xml
+            .children
+            .filter { $0.name == Self.innerBoundaryKey }
+            .compactMap { try? $0.requiredKmlChild(ofType: LinearRing.self) }
+
+        if !innerBoundsElements.isEmpty {
+            innerBoundaryIs = innerBoundsElements
         } else {
             innerBoundaryIs = nil
         }
@@ -82,7 +86,7 @@ public extension KMLPolygon {
     ///
     /// For reference, see [KML Documentation](https://developers.google.com/kml/documentation/kmlreference#polygon)
     struct LinearRing {
-        public let coordinates: [KMLCoordinate]
+        public var coordinates: [KMLCoordinate]
 
         public init(coordinates: [KMLCoordinate]) {
             self.coordinates = coordinates

@@ -21,12 +21,13 @@ public struct KMLPlacemark {
     public var styleUrl: KMLStyleUrl?
     public var style: KMLStyle?
 
-    public init(name: String,
-                featureDescription: String? = nil,
-                geometry: KMLGeometry,
-                styleUrl: KMLStyleUrl? = nil,
-                style: KMLStyle? = nil)
-    {
+    public init(
+        name: String,
+        featureDescription: String? = nil,
+        geometry: KMLGeometry,
+        styleUrl: KMLStyleUrl? = nil,
+        style: KMLStyle? = nil
+    ) {
         self.name = name
         self.featureDescription = featureDescription
         self.geometry = geometry
@@ -46,11 +47,18 @@ extension KMLPlacemark: KmlElement {
         try Self.verifyXmlTag(xml)
         self.name = Self.nameFromXml(xml)
         self.featureDescription = Self.descriptionFromXml(xml)
-        guard let childGeometryType = KMLGeometryType.allCases.first(where: { xml[$0.rawValue].error == nil })
+
+        guard let childGeometryType = KMLGeometryType
+            .allCases
+            .first(where: { xml[$0.rawValue].error == nil })
         else {
             throw KMLError.missingRequiredElement(elementName: "Geometry")
         }
-        let childGeometry = try childGeometryType.concreteType.init(xml: xml[childGeometryType.rawValue])
+
+        let childGeometry = try childGeometryType
+            .concreteType
+            .init(xml: xml[childGeometryType.rawValue])
+
         if let multiGeom = childGeometry as? KMLMultiGeometry,
            multiGeom.geometries.count == 1
         {
@@ -69,7 +77,9 @@ extension KMLPlacemark: KmlElement {
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(name: "name", value: name)
-        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
+        if let featureDescription {
+            element.addChild(name: "description", value: featureDescription)
+        }
         element.addChild(geometry.xmlElement)
         _ = styleUrl.map { element.addChild($0.xmlElement) }
         _ = style.map { element.addChild($0.xmlElement) }

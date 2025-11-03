@@ -45,10 +45,13 @@ extension KMLFolder: KmlElement {
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
         element.addChild(name: "name", value: name)
-        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
+        if let featureDescription {
+            element.addChild(name: "description", value: featureDescription)
+        }
         for item in features {
             element.addChild(item.xmlElement)
         }
+
         return element
     }
 }

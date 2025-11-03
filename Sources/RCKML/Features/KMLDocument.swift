@@ -22,13 +22,14 @@ public struct KMLDocument {
     public var name: String?
     public var featureDescription: String?
     public var features: [KMLFeature]
-    public var styles: [KMLStyleUrl: KMLStyleSelector]
+    public var styles: [KMLStyleUrl : KMLStyleSelector]
 
-    public init(name: String? = nil,
-                featureDescription: String? = nil,
-                features: [KMLFeature] = [],
-                styles: [KMLStyleUrl: KMLStyleSelector] = [:])
-    {
+    public init(
+        name: String? = nil,
+        featureDescription: String? = nil,
+        features: [KMLFeature] = [],
+        styles: [KMLStyleUrl : KMLStyleSelector] = [:]
+    ) {
         self.name = name
         self.featureDescription = featureDescription
         self.features = features
@@ -53,8 +54,12 @@ extension KMLDocument: KmlElement {
 
     public var xmlElement: AEXMLElement {
         let element = AEXMLElement(name: Self.kmlTag)
-        _ = name.map { element.addChild(name: "name", value: $0) }
-        _ = featureDescription.map { element.addChild(name: "description", value: $0) }
+        if let name {
+            element.addChild(name: "name", value: name)
+        }
+        if let featureDescription {
+            element.addChild(name: "description", value: featureDescription)
+        }
 
         for (_, style) in styles {
             element.addChild(style.xmlElement)
@@ -78,10 +83,15 @@ public extension KMLDocument {
     /// Returns the full string representation of the KML file.
     func kmlString() throws -> String {
         let xmlDoc = AEXMLDocument()
-        let kmlRoot = xmlDoc.addChild(name: "kml", attributes: ["xmlns": "http://www.opengis.net/kml/2.2"])
+        let baseAttributes = ["xmlns" : "http://www.opengis.net/kml/2.2"]
+        let kmlRoot = xmlDoc.addChild(name: "kml", attributes: baseAttributes)
         kmlRoot.addChild(xmlElement)
-        _ = try xmlDoc.error.map { throw $0 }
-        _ = try kmlRoot.error.map { throw $0 }
+        if let xmlError = xmlDoc.error {
+            throw xmlError
+        }
+        if let kmlError = kmlRoot.error {
+            throw kmlError
+        }
         return xmlDoc.xml
     }
 
@@ -118,15 +128,16 @@ public extension KMLDocument {
     /// Given a KMLStyleUrl reference from a feature contained in this document,
     /// returns the global style that is referenced by the url.
     func getStyleFromUrl(_ styleUrl: KMLStyleUrl) -> KMLStyle? {
-        if let aSelector = styles[styleUrl] {
-            if let aStyle = aSelector as? KMLStyle {
-                return aStyle
-            } else if let aMap = aSelector as? KMLStyleMap {
-                if let mappedStyle = aMap.style {
-                    return mappedStyle
-                } else if let mappedUrl = aMap.styleUrl {
-                    return getStyleFromUrl(mappedUrl)
-                }
+        guard let aSelector = styles[styleUrl] else {
+            return nil
+        }
+        if let aStyle = aSelector as? KMLStyle {
+            return aStyle
+        } else if let aMap = aSelector as? KMLStyleMap {
+            if let mappedStyle = aMap.style {
+                return mappedStyle
+            } else if let mappedUrl = aMap.styleUrl {
+                return getStyleFromUrl(mappedUrl)
             }
         }
         return nil
@@ -191,6 +202,7 @@ public extension KMLDocument {
         let styleElements = xmlElement[KMLStyle.kmlTag].all ?? []
         let styles = styleElements.compactMap { try? KMLStyle(xml: $0) }
         let all: [KMLStyleSelector] = styles + styleMaps
+
         return all.reduce(into: [:]) { dict, style in
             if let styleId = style.id {
                 let styleUrl = KMLStyleUrl(styleId: styleId)

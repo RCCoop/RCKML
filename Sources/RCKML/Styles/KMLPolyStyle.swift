@@ -41,7 +41,7 @@ extension KMLPolyStyle: KmlElement {
         try Self.verifyXmlTag(xml)
         id = xml.attributes["id"]
         color = xml.optionalKmlChild(ofType: KMLColor.self)
-        isFilled = xml["fill"].bool ?? true
+        isFilled = xml["fill"].bool ?? false
         isOutlined = xml["outline"].bool ?? true
     }
 
@@ -49,7 +49,9 @@ extension KMLPolyStyle: KmlElement {
         let element = AEXMLElement(name: Self.kmlTag, attributes: Self.xmlAttributesWithId(id))
         element.addChild(name: "fill", value: isFilled ? "1" : "0")
         element.addChild(name: "outline", value: isOutlined ? "1" : "0")
-        _ = color.map { element.addChild($0.xmlElement) }
+        if let color {
+            element.addChild(color.xmlElement)
+        }
         return element
     }
 }
