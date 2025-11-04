@@ -1,110 +1,82 @@
 import CoreLocation
 @testable import RCKML
-import XCTest
+import Testing
 
-final class RCKMLTests: XCTestCase {
-    func testWriting() {
-        guard let doc = getTestDocument() else {
-            return
-        }
-
-        do {
-            let stringRep = try doc.kmlString()
-            print(stringRep)
-        } catch {
-            XCTFail("Failed to write doc.kmlString: \(error.localizedDescription)")
-        }
+struct RCKMLTests {
+    @Test
+    func writeDocument() throws {
+        let doc = try getTestDocument()
+        let _ = try doc.kmlString()
     }
 
-    func testKMZ() {
-        guard let doc = getTestDocument() else {
-            return
-        }
+    @Test
+    func kmzCompression() throws {
+        let doc = try getTestDocument()
 
-        do {
-            let kmzData = try doc.kmzData()
-            let unzipped = try KMLDocument(kmzData: kmzData)
-            XCTAssertEqual(doc.features.count, unzipped.features.count)
-            XCTAssertEqual(doc.placemarksRecursive.count, unzipped.placemarksRecursive.count)
-
-            let docSize = try doc.kmlData().count
-            let kmzSize = kmzData.count
-            let compression = 1 - (Double(kmzSize) / Double(docSize))
-            print("KML to KMZ: compressed by \((compression * 100).rounded())%")
-        } catch {
-            XCTFail("KMZ Error: \(error)")
-        }
+        let kmzData = try doc.kmzData()
+        let unzipped = try KMLDocument(kmzData: kmzData)
+        #expect(doc.features.count == unzipped.features.count)
+        #expect(doc.placemarksRecursive.count == unzipped.placemarksRecursive.count)
     }
 
-    func testMutation() {
-        guard var doc = getTestDocument() else {
-            return
-        }
+    @Test
+    func mutation() throws {
+        var doc = try getTestDocument()
 
         let folderCount = doc.folders.count
         let featuresCount = doc.features.count
         doc.features.removeAll(where: { $0 is KMLFolder })
-        XCTAssertEqual(doc.features.count, featuresCount - folderCount)
+        #expect(doc.features.count == featuresCount - folderCount)
     }
-}
 
-// MARK: Finished Tests
-
-extension RCKMLTests {
-    func testKmlColors() throws {
+    @Test
+    func colors() throws {
         // 80F0BE78
         // == rgba: 120,190,240,50%
         let kmlStruct = KMLColor(red: 120.0 / 255.0, green: 190.0 / 255.0, blue: 240.0 / 255.0, alpha: 0.5)
-        XCTAssertEqual(kmlStruct.red * 255.0, 120.0)
-        XCTAssertEqual(kmlStruct.green * 255.0, 190)
-        XCTAssertEqual(kmlStruct.blue * 255.0, 240)
-        XCTAssertEqual(kmlStruct.alpha, 0.5)
+        #expect(kmlStruct.red * 255.0 == 120.0)
+        #expect(kmlStruct.green * 255.0 == 190)
+        #expect(kmlStruct.blue * 255.0 == 240)
+        #expect(kmlStruct.alpha == 0.5)
 
         let asString = kmlStruct.colorString
-        XCTAssertEqual(asString, "80F0BE78")
+        #expect(asString == "80F0BE78")
 
         let reconstructed = try KMLColor(asString)
-        XCTAssertEqual(Int(reconstructed.red * 255.0), 120)
-        XCTAssertEqual(Int(reconstructed.green * 255.0), 190)
-        XCTAssertEqual(Int(reconstructed.blue * 255.0), 240)
-        XCTAssertEqual(reconstructed.alpha, 0.5, accuracy: 0.1)
+        #expect(Int(reconstructed.red * 255.0) == 120)
+        #expect(Int(reconstructed.green * 255.0) == 190)
+        #expect(Int(reconstructed.blue * 255.0) == 240)
+        #expect(abs(reconstructed.alpha - 0.5) < 0.1)
     }
 
-    func testStyles() {
-        guard let document = getTestDocument() else {
-            return
-        }
+    @Test
+    func styles() throws {
+        let document = try getTestDocument()
 
         let styles = document.styles
-        guard let transPurpleLineGreenPolyStyle = styles.values.first(where: { $0.id == "transPurpleLineGreenPoly" }) as? KMLStyle else {
-            XCTFail("Couldn't find style \"transPurpleLineGreenPoly\" in top level of document")
-            return
-        }
 
-        guard let lineStyle = transPurpleLineGreenPolyStyle.lineStyle else {
-            XCTFail("No linestyle found in \"transPurpleLineGreenPoly\" style")
-            return
-        }
-        guard let polyStyle = transPurpleLineGreenPolyStyle.polyStyle else {
-            XCTFail("No polystyle found in \"transPurpleLineGreenPoly\"")
-            return
-        }
+        let transPurpleLineGreenPolyStyle = try #require(styles.values.first(where: { $0.id == "transPurpleLineGreenPoly" }) as? KMLStyle)
+        let lineStyle = try #require(transPurpleLineGreenPolyStyle.lineStyle)
+        let polyStyle = try #require(transPurpleLineGreenPolyStyle.polyStyle)
 
-        XCTAssertEqual(lineStyle.width, 4)
-        XCTAssertEqual(lineStyle.color?.red, 1)
-        XCTAssertEqual(lineStyle.color?.green, 0)
-        XCTAssertEqual(lineStyle.color?.blue, 1)
-        XCTAssertEqual(lineStyle.color?.alpha ?? 0.0, 0.5, accuracy: 0.01)
-        XCTAssertEqual(polyStyle.color?.red, 0)
-        XCTAssertEqual(polyStyle.color?.green, 1)
-        XCTAssertEqual(polyStyle.color?.blue, 0)
-        XCTAssertEqual(polyStyle.color?.alpha ?? 0.0, 0.5, accuracy: 0.01)
+        #expect(lineStyle.width == 4)
+
+        let lineColor = try #require(lineStyle.color)
+        #expect(lineColor.red == 1)
+        #expect(lineColor.green == 0)
+        #expect(lineColor.blue == 1)
+        #expect(abs(lineColor.alpha - 0.5) < 0.01)
+
+        let polyColor = try #require(polyStyle.color)
+        #expect(polyColor.red == 0)
+        #expect(polyColor.green == 1)
+        #expect(polyColor.blue == 0)
+        #expect(abs(polyColor.alpha - 0.5) < 0.01)
     }
 
-    func testFoldersAreEqual() {
-        guard let document = getTestDocument() else {
-            return
-        }
+    @Test
+    func foldersAreEqual() throws {
+        let document = try getTestDocument()
 
         let knownFolderNames: Set<String?> = [
             "Placemarks",
@@ -115,63 +87,44 @@ extension RCKMLTests {
             "Polygons"
         ]
         let existingFolderNames = document.folders.map(\.name)
-        XCTAssertEqual(knownFolderNames.count, existingFolderNames.count)
-        XCTAssert(knownFolderNames.subtracting(existingFolderNames).isEmpty)
+        #expect(knownFolderNames.count == existingFolderNames.count)
+        #expect(knownFolderNames.subtracting(existingFolderNames).isEmpty)
     }
 
-    func testPlacemarksFolder() {
-        guard let document = getTestDocument() else {
-            return
-        }
+    @Test
+    func placemarksFolder() throws {
+        let document = try getTestDocument()
 
-        guard let placemarksFolder = document.getItemNamed("Placemarks") as? KMLFolder else {
-            XCTFail("Couldn't find \"Placemarks\" folder in document")
-            return
-        }
+        let placemarksFolder = try #require(document.getItemNamed("Placemarks") as? KMLFolder)
 
         let placemarks = placemarksFolder.placemarks
-        XCTAssertEqual(placemarks.count, 3)
+        #expect(placemarks.count == 3)
 
-        let knownPointNames = Set(["Simple placemark", "Floating placemark", "Extruded placemark"])
+        let knownPointNames: Set<String> = ["Simple placemark", "Floating placemark", "Extruded placemark"]
         let existingPointNames = Set(placemarks.map(\.name))
-        XCTAssertEqual(knownPointNames, existingPointNames)
+        #expect(knownPointNames == existingPointNames)
 
-        guard let simplePlacemark = placemarks.first(where: { $0.name == "Simple placemark" }) else {
-            XCTFail("Failed to find placemark \"Simple placemark\" in folder")
-            return
-        }
-        guard let simplePoint = simplePlacemark.geometry as? KMLPoint else {
-            XCTFail("Failed to cast \"Simple placemark\"'s geometry to KMLPoint")
-            return
-        }
+        let simplePlacemark = try #require(placemarks.first(where: { $0.name == "Simple placemark" }))
 
-        XCTAssertEqual(simplePoint.coordinate.latitude, 37.42228990140251)
-        XCTAssertEqual(simplePoint.coordinate.longitude, -122.0822035425683)
-        XCTAssertEqual(simplePoint.coordinate.altitude, 0)
+        let simplePoint = try #require(simplePlacemark.geometry as? KMLPoint)
+
+        #expect(simplePoint.coordinate.latitude == 37.42228990140251)
+        #expect(simplePoint.coordinate.longitude == -122.0822035425683)
+        #expect(simplePoint.coordinate.altitude == 0)
     }
 
-    func testPolygons() {
-        guard let document = getTestDocument() else {
-            return
-        }
+    @Test
+    func polygons() throws {
+        let document = try getTestDocument()
 
-        guard let polygonsFolder = document.getItemNamed("Polygons") as? KMLFolder else {
-            XCTFail("Couldn't find \"Polygons\" folder in document")
-            return
-        }
+        let polygonsFolder = try #require(document.getItemNamed("Polygons") as? KMLFolder)
 
         let allPolygonFeatures = polygonsFolder.placemarksRecursive
-        XCTAssertEqual(allPolygonFeatures.count, 9)
+        #expect(allPolygonFeatures.count == 9)
 
-        guard let thePentagon = allPolygonFeatures.first(where: { $0.name == "The Pentagon" }) else {
-            XCTFail("Couldn't find The Pentagon")
-            return
-        }
+        let thePentagon = try #require(allPolygonFeatures.first(where: { $0.name == "The Pentagon" }))
 
-        guard let thePolygon = thePentagon.geometry as? KMLPolygon else {
-            XCTFail("Couldn't cast The Pentagon's geometry to KMLPolygon")
-            return
-        }
+        let thePolygon = try #require(thePentagon.geometry as? KMLPolygon)
 
         let polygonCoords = thePolygon.outerBoundaryIs.coordinates
 
@@ -184,44 +137,35 @@ extension RCKMLTests {
         -77.05788457660967,38.87253259892824,100
         """
         let knownCoordLines = coordString.components(separatedBy: .newlines)
-        XCTAssertEqual(polygonCoords.count, knownCoordLines.count)
+        #expect(polygonCoords.count == knownCoordLines.count)
     }
 
-    func testPathsFolder() {
-        guard let document = getTestDocument() else {
-            return
-        }
+    @Test
+    func pathsFolder() throws {
+        let document = try getTestDocument()
 
-        guard let placemarksFolder = document.getItemNamed("Paths") as? KMLFolder else {
-            XCTFail("Couldn't find \"Placemarks\" folder in document")
-            return
-        }
+        let placemarksFolder = try #require(document.getItemNamed("Paths") as? KMLFolder)
 
         let placemarks = placemarksFolder.placemarks
-        XCTAssertEqual(placemarks.count, 6)
+        #expect(placemarks.count == 6)
 
-        let knownPathNames = Set(["Tessellated", "Untessellated", "Absolute", "Absolute Extruded", "Relative", "Relative Extruded"])
+        let knownPathNames: Set<String> = [
+            "Tessellated",
+            "Untessellated",
+            "Absolute",
+            "Absolute Extruded",
+            "Relative",
+            "Relative Extruded"
+        ]
         let existingPathNames = Set(placemarks.map(\.name))
-        XCTAssertEqual(knownPathNames, existingPathNames)
+        #expect(knownPathNames == existingPathNames)
 
-        guard let absolutePath = placemarks.first(where: { $0.name == "Absolute" }) else {
-            XCTFail("Couldn't find path \"Absolute\" in paths folder")
-            return
-        }
+        let absolutePath = try #require(placemarks.first(where: { $0.name == "Absolute" }))
 
-        guard let styleUrl = absolutePath.styleUrl else {
-            XCTFail("Couldn't find StyleURL in path")
-            return
-        }
-        guard let _ = document.getStyleFromUrl(styleUrl) else {
-            XCTFail("Couldn't find style with url \"\(styleUrl)\"")
-            return
-        }
+        let styleUrl = try #require(absolutePath.styleUrl)
+        #expect(document.getStyleFromUrl(styleUrl) != nil)
 
-        guard let lineString = absolutePath.geometry as? KMLLineString else {
-            XCTFail("Couldn't cast path's geometry to KMLLineString")
-            return
-        }
+        let lineString = try #require(absolutePath.geometry as? KMLLineString)
 
         let absolutePathCoordString = """
         -112.265654928602,36.09447672602546,2357
@@ -236,42 +180,40 @@ extension RCKMLTests {
         -112.2670588176031,36.08682685262568,2357
         -112.2657374587321,36.08646312301303,2357
         """
-        let coords: [CLLocationCoordinate2D] = absolutePathCoordString.components(separatedBy: .newlines).compactMap { line -> CLLocationCoordinate2D? in
-            let comps = line.components(separatedBy: ",").compactMap { Double($0) }
-            if comps.count == 3 {
-                return CLLocationCoordinate2D(latitude: comps[1], longitude: comps[0])
-            } else {
-                return nil
+        let coords: [CLLocationCoordinate2D] = absolutePathCoordString
+            .components(separatedBy: .newlines)
+            .compactMap { line -> CLLocationCoordinate2D? in
+                let comps = line.components(separatedBy: ",").compactMap { Double($0) }
+                if comps.count == 3 {
+                    return CLLocationCoordinate2D(latitude: comps[1], longitude: comps[0])
+                } else {
+                    return nil
+                }
             }
-        }
 
-        XCTAssertEqual(coords.count, lineString.coordinates.count)
+        #expect(coords.count == lineString.coordinates.count)
         for idx in 0 ..< lineString.coordinates.count {
             let knownCoordinate = coords[idx]
             let existingCoordinate = lineString.coordinates[idx]
-            XCTAssertEqual(knownCoordinate.latitude, existingCoordinate.latitude)
-            XCTAssertEqual(knownCoordinate.longitude, existingCoordinate.longitude)
-            XCTAssertEqual(existingCoordinate.altitude, 2357)
+            #expect(knownCoordinate.latitude == existingCoordinate.latitude)
+            #expect(knownCoordinate.longitude == existingCoordinate.longitude)
+            #expect(existingCoordinate.altitude == 2357)
         }
     }
 }
 
 // MARK: Helper Functions
 
+struct NoResourceError: Error { }
+
 extension RCKMLTests {
-    func getTestDocument() -> KMLDocument? {
+    func getTestDocument() throws -> KMLDocument {
         let bundle = Bundle.module
         guard let fileUrl = bundle.url(forResource: "GoogleTest", withExtension: "kml") else {
-            XCTFail("URL for KML file could not be found")
-            return nil
+            throw NoResourceError()
         }
-        do {
-            let data = try Data(contentsOf: fileUrl)
-            let document = try KMLDocument(data)
-            return document
-        } catch {
-            XCTFail("KML Reader Error: \(error.localizedDescription)")
-            return nil
-        }
+        let data = try Data(contentsOf: fileUrl)
+        let document = try KMLDocument(data)
+        return document
     }
 }
